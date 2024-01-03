@@ -6,6 +6,7 @@ Timothy Mah C++ module assignment
 references
 https://www.tutorialspoint.com/how-to-read-a-text-file-with-cplusplus
 https://stackoverflow.com/questions/28338775/what-is-iosiniosout
+https://www.softwaretestinghelp.com/regex-in-cpp/
 possible extra feature
 https://github.com/reo7sp/tgbot-cpp
 
@@ -17,7 +18,26 @@ https://github.com/reo7sp/tgbot-cpp
 #include <iomanip>
 #include <ios>
 #include <fstream>
+#include <regex>
 using namespace std;
+
+vector<string> tokenizeString (string input, string delimiter)
+{
+	size_t pos = 0;
+	string token;
+	vector<string> result;
+
+	while ((pos = input.find(delimiter)) != string::npos) 
+	{
+    	token = input.substr(0, pos);
+    	result.push_back (token);
+		input.erase(0, pos + delimiter.length());
+	}
+
+	result.push_back (input);
+
+	return (result);
+}
 
 int men1(string confilename) //reads and process config file
 {
@@ -27,7 +47,15 @@ int men1(string confilename) //reads and process config file
     {
         while(getline(confile, lp))
         {
-            cout << lp << "\n";
+            if (regex_match(lp,regex("Grid[XY]_IdxRange(.*)")))
+            {
+                cout << "\nheyyy it works\n";
+            }
+            else
+            {
+                cout << lp << "\n";
+            }
+            
         }
         confile.close();
     }
