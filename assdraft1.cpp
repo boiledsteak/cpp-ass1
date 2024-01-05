@@ -19,8 +19,10 @@ https://github.com/reo7sp/tgbot-cpp
 #include <ios>
 #include <fstream>
 #include <regex>
+#include <vector>
 using namespace std;
 
+//take in string and delimiter, return vector. From Mr Thien
 vector<string> tokenizeString (string input, string delimiter)
 {
 	size_t pos = 0;
@@ -39,25 +41,32 @@ vector<string> tokenizeString (string input, string delimiter)
 	return (result);
 }
 
-int men1(string confilename) //reads and process config file
+//reads and process config file. Menu option 1
+int men1(string confilename) 
 {
     string lp; //line pointer when reading file
-    fstream confile(confilename,ios::in); //why must put the ios
-    if (confile.is_open())
+    fstream confile(confilename,ios::in);
+    vector<string> tokenStringVectorX; //holds the GridX_IdxRange=0-8. [0] holds GridX... [1] holds 0-8
+    vector<string> tokenStringVectorY; //holds the GridY_IdxRange=0-8. [0] holds GridY... [1] holds 0-8
+
+    if (confile.is_open()) //could add more input validation
     {
+        //extract the X and Y range for grid
         while(getline(confile, lp))
         {
-            if (regex_match(lp,regex("Grid[XY]_IdxRange(.*)")))
+            if (regex_match(lp,regex("Grid[X]_IdxRange(.*)")))
             {
-                cout << "\nheyyy it works\n";
+                tokenStringVectorX = tokenizeString(lp, "=");
             }
-            else
+
+            if (regex_match(lp,regex("Grid[Y]_IdxRange(.*)")))
             {
-                cout << lp << "\n";
-            }
-            
+                tokenStringVectorY = tokenizeString(lp, "=");
+            }            
         }
         confile.close();
+        cout << "Reading in GridX_IdxRange:	" << tokenStringVectorX[1] << "	...done!" << "\n";
+        cout << "Reading in GridY_IdxRange:	" << tokenStringVectorY[1] << "	...done!" << "\n";
     }
     else
     {
@@ -66,7 +75,9 @@ int men1(string confilename) //reads and process config file
 
     return 0;
 }
-
+// @@@@@@@@@@@@ 
+// MAIN
+// @@@@@@@@@@@@
 int main()
 {
     int progflow = 1;
@@ -89,6 +100,7 @@ int main()
             
             cout << "Please enter config file name:";
             cin >> confilename;
+			cout << "\n";
 
             men1(confilename);
         }

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// g++ -std=c++11 tokenizeString.cpp -o tokenizeString.app
+
 
 vector<string> tokenizeString (string input, string delimiter)
 {
@@ -34,6 +34,7 @@ int main ()
 	vector<string> tokenStringVector = tokenizeString (example1, "=");
 
 	cout << endl;
+	cout << "this part\n";
 	for (int i=0; i<tokenStringVector.size(); i++)
 		cout << tokenStringVector [i] << endl;
 	cout << endl;
