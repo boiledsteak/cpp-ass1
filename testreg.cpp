@@ -1,17 +1,16 @@
 #include <regex>
 #include <iostream>
+#include <string>
 using namespace std;
+
+void printer(char c, int n)
+{
+    // character c will be printed n times
+    cout << string(n, c) << endl;
+}
 
 int main()
 {
-    string lp = "hellorgegrg";
-
-    if (regex_match(lp,regex("\\bhello\\b")))
-    {
-        cout << "\nheyyy it works\n";
-    }
-    else
-    {
-        cout << lp << "\n";
-    }
+    printer('#',9);
+    cout << string(9, '#');
 }

@@ -44,6 +44,21 @@ vector<string> tokenizeString (string input, string delimiter)
 	return (result);
 }
 
+//stores upper and lower X and Y
+int *xyer(int *xys, vector<string> fivelines)
+{
+    vector<string> tempx = tokenizeString(fivelines[0], "-");
+    vector<string> tempy = tokenizeString(fivelines[1], "-");
+    
+    xys[0] = stoi(tempx[0]);
+    xys[1] = stoi(tempx[1]);
+    xys[2] = stoi(tempy[0]);
+    xys[3] = stoi(tempy[1]);
+    
+    return xys;
+}
+
+
 //reads and process config file. Menu option 1
 vector<string> men1(string confilename, vector<string> fivelines) 
 {
@@ -104,8 +119,11 @@ vector<string> men1(string confilename, vector<string> fivelines)
 }
 
 //display city map. Menu option 2
-int men2()
+int men2(vector<string> fivelines)
 {
+    
+
+
     return 0;
 }
 // @@@@@@@@@@@@ 
@@ -115,9 +133,11 @@ int main()
 {
     int progflow = 1;
     int menuchoice = 0;
-    //holds 5 important lines from config.txt
-    //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
-    vector<string> fivelines;
+    
+    
+    vector<string> fivelines; //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
+    // int lowerx, upperx, lowery, uppery; //0-8 for gridX and 0-8 for GridY
+    int *xys = new int[3]; //[0] is lower X, [1] is upper X, [2] is lower Y, [3] is upper Y
 
     while (progflow == 1)
     {
@@ -127,6 +147,8 @@ int main()
         cout << "------------------------------------------------------\n";
         cout << "Welcome to weather information processing system!\n\n";
         cout << "1)" << "\tRead in and process a config file\n";
+		cout << "2)" << "\tDisplay city map\n";
+		cout << "8)" << "\tExit\n";
         cout << "\n\nTell me what you want!\n\n";
         cin >> menuchoice;
         cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
@@ -144,14 +166,35 @@ int main()
 
         if (menuchoice ==2)
         {
+            if (!fivelines.empty())
+            {
+                xys = xyer(xys, fivelines);
+                cout << "000";
+                //print the first line of #
+                for (int i=0; i <= xys[1]+2; i++)
+                {
+                    cout << "#\t";
+                }
+                //print the second line
+                
+			    cout << "\nMenu choice 2 complete";
+            }
+            else
+            {
+                cout << "config file not processed!\nGoing back to main menu...";
+            }
 
+            
         }
+
+		if (menuchoice ==8)
+		{
+			delete xys;
+			progflow = 0;
+		}
 
         cout << "\n\n\n";
 
-        
-
-        // progflow = 0;
     }
     
 
