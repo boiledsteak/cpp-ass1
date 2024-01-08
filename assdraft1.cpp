@@ -10,6 +10,9 @@ https://www.softwaretestinghelp.com/regex-in-cpp/
 possible extra feature
 https://github.com/reo7sp/tgbot-cpp
 
+issues
+regex may be system agnostic
+
 
 =============================*/
 
@@ -46,27 +49,45 @@ int men1(string confilename)
 {
     string lp; //line pointer when reading file
     fstream confile(confilename,ios::in);
-    vector<string> tokenStringVectorX; //holds the GridX_IdxRange=0-8. [0] holds GridX... [1] holds 0-8
-    vector<string> tokenStringVectorY; //holds the GridY_IdxRange=0-8. [0] holds GridY... [1] holds 0-8
+    vector<string> tokenStringVectorX; //temp holds the GridX_IdxRange=0-8. [0] is GridX..., [1] is 0-8
+    vector<string> tokenStringVectorY; //temp holds the GridY_IdxRange=0-8. [0] is GridY..., [1] is 0-8
+    
+    //holds 5 important lines from config.txt
+    //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
+    vector<string> fivelines; 
+    
 
     if (confile.is_open()) //could add more input validation
     {
-        //extract the X and Y range for grid
-        while(getline(confile, lp))
+        //read line by line config file
+        while (getline(confile, lp))
         {
-            if (regex_match(lp,regex("Grid[X]_IdxRange(.*)")))
+            // if not a comment, continue
+            if (!regex_match(lp,regex("//(.*)")))
             {
-                tokenStringVectorX = tokenizeString(lp, "=");
-            }
-
-            if (regex_match(lp,regex("Grid[Y]_IdxRange(.*)")))
-            {
-                tokenStringVectorY = tokenizeString(lp, "=");
-            }            
-        }
+                //look for GridX
+                if (regex_match(lp,regex("Grid[X]_IdxRange(.*)")))
+                {
+                    tokenStringVectorX = tokenizeString(lp, "=");
+                    fivelines.push_back(tokenStringVectorX[1]);
+                }
+                //look for GridY
+                if (regex_match(lp,regex("Grid[Y]_IdxRange(.*)")))
+                {
+                    tokenStringVectorY = tokenizeString(lp, "=");
+                    fivelines.push_back(tokenStringVectorY[1]);
+                }
+                //look for .txt file
+                if (regex_match(lp,regex(".*txt$")))
+                {
+                    fivelines.push_back(lp);
+                }
+            }  
+        }   
         confile.close();
-        cout << "Reading in GridX_IdxRange:	" << tokenStringVectorX[1] << "	...done!" << "\n";
-        cout << "Reading in GridY_IdxRange:	" << tokenStringVectorY[1] << "	...done!" << "\n";
+
+        cout << "Reading in GridX_IdxRange:	" << fivelines[0] << "	...done!" << "\n";
+        cout << "Reading in GridY_IdxRange:	" << fivelines[1] << "	...done!" << "\n";
     }
     else
     {
