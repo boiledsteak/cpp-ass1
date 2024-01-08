@@ -45,16 +45,14 @@ vector<string> tokenizeString (string input, string delimiter)
 }
 
 //reads and process config file. Menu option 1
-int men1(string confilename) 
+vector<string> men1(string confilename, vector<string> fivelines) 
 {
     string lp; //line pointer when reading file
     fstream confile(confilename,ios::in);
     vector<string> tokenStringVectorX; //temp holds the GridX_IdxRange=0-8. [0] is GridX..., [1] is 0-8
     vector<string> tokenStringVectorY; //temp holds the GridY_IdxRange=0-8. [0] is GridY..., [1] is 0-8
     
-    //holds 5 important lines from config.txt
-    //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
-    vector<string> fivelines; 
+    
     
 
     if (confile.is_open()) //could add more input validation
@@ -88,12 +86,26 @@ int men1(string confilename)
 
         cout << "Reading in GridX_IdxRange:	" << fivelines[0] << "	...done!" << "\n";
         cout << "Reading in GridY_IdxRange:	" << fivelines[1] << "	...done!" << "\n";
+        cout << "\n";
+        cout << "Storing data from input files: \n";
+        cout << left << setw(20) << fivelines[2] << "...done!" << "\n";
+        cout << left << setw(20) << fivelines[3] << "...done!" << "\n";
+        cout << left << setw(20) << fivelines[4] << "...done!" << "\n";
+        cout << "\n";
+        cout << "All records successfully stored! Going back to main menu...\n\n";
+
     }
     else
     {
         cout << "\nfile not found";
     }
 
+    return fivelines;
+}
+
+//display city map. Menu option 2
+int men2()
+{
     return 0;
 }
 // @@@@@@@@@@@@ 
@@ -103,6 +115,10 @@ int main()
 {
     int progflow = 1;
     int menuchoice = 0;
+    //holds 5 important lines from config.txt
+    //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
+    vector<string> fivelines;
+
     while (progflow == 1)
     {
         cout << "\n\n\n";
@@ -123,15 +139,19 @@ int main()
             cin >> confilename;
 			cout << "\n";
 
-            men1(confilename);
+            fivelines = men1(confilename, fivelines);
         }
-        
+
+        if (menuchoice ==2)
+        {
+
+        }
 
         cout << "\n\n\n";
 
         
 
-        progflow = 0;
+        // progflow = 0;
     }
     
 
