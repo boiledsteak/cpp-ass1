@@ -175,9 +175,9 @@ int main()
                 {
                     cout << "#\t";
                 }
-                //print the second line
-                
-			    cout << "\nMenu choice 2 complete";
+                //TODO print the second line
+
+			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
             }
             else
             {
