@@ -5,45 +5,45 @@ using namespace std;
 
 void printGrid(int coordinates[][2], int size) 
 {
-    // Find the dimensions of the grid
-    int maxX = 13;
-    int maxY = 20;
-    // set the padding for x axis. 3 space wide default
-    int spacingamt = 3;
-    string spacing = string(spacingamt,' ');
+    // Find the dimensions of the grid. //TODO Rmb to cast string to int. Double to int
+    int maxX = 10;
+    int maxY = 16;
+    // set the padding for x axis. Size changes dynamically
+    // minimum values to accommodate for 3 digit x and y axes values
+    int spacingamt = 6; //default minimum 4
+    string border = "###";
 
     // Print points with y-axis labels
     for (int y = maxY; y >= 0; --y) 
     {
-        cout << y;
+        cout << left << setw(spacingamt) << y << border;
         for (int x = 0; x <= maxX; ++x) 
         {
-            string point = spacing + " ";
+            cout << left << setw(spacingamt) << " ";
             for (int i = 0; i < size; ++i) 
             {
                 if (coordinates[i][0] == x && coordinates[i][1] == y) 
                 {
-                    point = spacing + "X";
+                    cout << left << setw(spacingamt) << "X";
                 }
             }
-            cout << point;
         }
         cout << "\n";
     }
 
     // print the bottom #
-    cout << " ";// move x axis lables away from y axis labels. Don't change
+    cout << setw((spacingamt*2)+border.length()) << " ";// move x axis lables away from y axis labels. Don't change
     for (int i=0; i <= maxX; i++)
     {
-        cout << spacing+"#";
+        cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
 
     // Print x-axis labels
-    cout << " ";// move x axis lables away from y axis labels. Don't change
+    cout << setw((spacingamt*2)+border.length()) << " ";// move x axis lables away from y axis labels. Don't change
     for (int x = 0; x <= maxX; ++x) 
     {
-        cout << spacing << x;
+        cout << left << setw(spacingamt) << x;
     }
     cout << "\n";
 }

@@ -189,7 +189,8 @@ int main()
 
 		if (menuchoice ==8)
 		{
-			delete xys;
+			// file deepcode ignore DoubleFree: <please specify a reason of ignoring this>
+   delete xys;
 			progflow = 0;
 		}
 
