@@ -6,34 +6,46 @@ using namespace std;
 void printGrid(int coordinates[][2], int size) 
 {
     // Find the dimensions of the grid. //TODO Rmb to cast string to int. Double to int
-    int maxX = 10;
-    int maxY = 16;
+    int maxX = 20;
+    int maxY = 20;
+    int count = 0;
     // set the padding for x axis. Size changes dynamically
     // minimum values to accommodate for 3 digit x and y axes values
-    int spacingamt = 6; //default minimum 4
-    string border = "###";
+    int spacingamt = 3; //default minimum 4
+    string border = "#";
 
-    // Print points with y-axis labels
+    // Print coordinates with y-axis labels
     for (int y = maxY; y >= 0; --y) 
     {
+        
+        // print the left #
         cout << left << setw(spacingamt) << y << border;
         for (int x = 0; x <= maxX; ++x) 
         {
+            // print the empty spaces
             cout << left << setw(spacingamt) << " ";
             for (int i = 0; i < size; ++i) 
             {
+                // print coordinates
                 if (coordinates[i][0] == x && coordinates[i][1] == y) 
                 {
                     cout << left << setw(spacingamt) << "X";
+                    
                 }
+                                                             
             }
+            
         }
+        
+        cout << border;
         cout << "\n";
     }
 
+    // move x axis lables away from y axis labels. Don't change
+    cout << setw(spacingamt) << " " << setw(spacingamt) << border << setw(border.length()) << " ";
+
     // print the bottom #
-    cout << setw((spacingamt*2)+border.length()) << " ";// move x axis lables away from y axis labels. Don't change
-    for (int i=0; i <= maxX; i++)
+    for (int i=0; i <= maxX+1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
