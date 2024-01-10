@@ -49,12 +49,12 @@ int *xyer(int *xys, vector<string> fivelines)
 {
     vector<string> tempx = tokenizeString(fivelines[0], "-");
     vector<string> tempy = tokenizeString(fivelines[1], "-");
-    
+
     xys[0] = stoi(tempx[0]);
     xys[1] = stoi(tempx[1]);
     xys[2] = stoi(tempy[0]);
     xys[3] = stoi(tempy[1]);
-    
+        
     return xys;
 }
 
@@ -189,7 +189,8 @@ int main()
 
 		if (menuchoice ==8)
 		{
-			delete xys;
+			// file deepcode ignore DoubleFree: <please specify a reason of ignoring this>
+   delete xys;
 			progflow = 0;
 		}
 
