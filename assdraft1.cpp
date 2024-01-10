@@ -56,64 +56,66 @@ vector<CityData> men2reader(string cityfilename)
         // create the struct
         vector<CityData> cities;
         //read line by line config file
-        while (getline(cityfile, lp))
+        while (getline(cityfile >> ws, lp))
         {
-            // fill the struct
-            cities.emplace_back(lp);
+            if (lp.size() != 0)
+            {
+                // fill the struct
+                cities.emplace_back(lp);
+            }
         }
         return cities;
     }
 }
 
-void printGrid(int coordinates[][2], int size) 
+void men2printer(const vector<vector<int>> &coordinates) 
 {
-    // Find the dimensions of the grid. //TODO Rmb to cast string to int. Double to int
     int maxX = 16;
     int maxY = 16;
     // set the padding for x axis. Size changes dynamically
-    // minimum values to accommodate for 3 digit x and y axes values
-    int spacingamt = 3; //default minimum 4
+    // minimum value 3 to accommodate for 3 digit x and y axes values
+    int spacingamt = 3;
     string border = "#";
-
     // Print coordinates with y-axis labels
     for (int y = maxY; y >= 0; --y) 
     {
         // print the left #
         cout << left << setw(spacingamt) << y << border;
+
         for (int x = 0; x <= maxX; ++x) 
         {
             // print the empty spaces
             cout << left << setw(spacingamt) << " ";
-            for (int i = 0; i < size; ++i) 
+
+            for (const auto& coord : coordinates) 
             {
-                // print coordinates
-                if (coordinates[i][0] == x && coordinates[i][1] == y) 
+                if (coord[0] == x && coord[1] == y) 
                 {
+                    // print coordinates
                     cout << left << setw(spacingamt) << "X";
-                }                                   
+                }
             }
         }
         // cout << border; //this prints right side border but its senget due to logic error. I gave up
         cout << "\n";
     }
-
-    // move x axis lables away from y axis labels. Don't change
+     // move x axis labels away from y axis labels. Don't change
     cout << setw(spacingamt) << " " << setw(spacingamt) << border << setw(border.length()) << " ";
-
     // print the bottom #
-    for (int i=0; i <= maxX+1; i++)
+    for (int i = 0; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
+    // move x axis lables away from y axis labels. Don't change
+    cout << setw((spacingamt * 2) + border.length()) << " ";
 
-    // Print x-axis labels
-    cout << setw((spacingamt*2)+border.length()) << " ";// move x axis lables away from y axis labels. Don't change
     for (int x = 0; x <= maxX; ++x) 
     {
+         // Print x-axis labels
         cout << left << setw(spacingamt) << x;
     }
-    cout <<"\n";
+    cout << "\n";
 }
 
 //take in string and delimiter, return vector. From Mr Thien
@@ -161,7 +163,7 @@ vector<string> men1(string confilename, vector<string> fivelines)
     if (confile.is_open()) //could add more input validation
     {
         //read line by line config file
-        while (getline(confile, lp))
+        while (getline(confile >> ws, lp))
         {
             // if not a comment, continue
             if (!regex_match(lp,regex("//(.*)")))
@@ -248,19 +250,23 @@ int main()
         {
             if (!fivelines.empty())
             {
+                // get the GridX and GriY
                 xys = xyer(xys, fivelines);
-               
+                // create the struct to hold citylocation.txt data
                 vector<CityData> cities = men2reader(fivelines[2]);
-                // Display the populated structs
+                // hold all the coordinates in vector
+                vector<vector<int>> coordinates;
+     
+                cout << "\nthis is the cities vector size->\t" << cities.size() << "\n";
+                //fill the coordinates vector with coordinates from the cities struct vector
                 for (auto &city : cities) 
                 {
                     city.category = abs(city.category);
-                    cout << "this is city x->\t" << city.x << "\n";
-                    cout << "this is city y->\t" << city.y << "\n";
-                    cout << "this is city cat->\t" << city.category << "\n";
-                    cout << "this is city name->\t" << city.cityName << "\n";
-                    cout << "-----------------\n";
-                }
+                    coordinates.push_back({city.x,city.y});
+                }                                                                    
+                int test = coordinates.size();
+                // print the grid
+                men2printer(coordinates);
                 // //print the first line of #
                 // for (int i=0; i <= xys[1]+2; i++)
                 // {
