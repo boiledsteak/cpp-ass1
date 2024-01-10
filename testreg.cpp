@@ -6,8 +6,8 @@ using namespace std;
 void printGrid(int coordinates[][2], int size) 
 {
     // Find the dimensions of the grid. //TODO Rmb to cast string to int. Double to int
-    int maxX = 20;
-    int maxY = 20;
+    int maxX = 16;
+    int maxY = 16;
     int count = 0;
     // set the padding for x axis. Size changes dynamically
     // minimum values to accommodate for 3 digit x and y axes values
@@ -37,7 +37,7 @@ void printGrid(int coordinates[][2], int size)
             
         }
         
-        cout << border;
+        // cout << border; //this prints right side border but its senget due to logic error. I gave up
         cout << "\n";
     }
 
@@ -57,7 +57,7 @@ void printGrid(int coordinates[][2], int size)
     {
         cout << left << setw(spacingamt) << x;
     }
-    cout << "\n";
+    cout <<"\n";
 }
 
 int main() 

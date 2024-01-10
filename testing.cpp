@@ -1,55 +1,68 @@
 #include <iostream>
-#include <iomanip>
+#include <vector>
+#include <sstream>
+#include <cstdlib>
 
-const int GRID_SIZE = 10;  // Adjust the grid size as needed
+using namespace std;
 
-void printGrid(int coordinates[][2], int numPoints) {
-    // Print top border
-    std::cout << "+----------------------+" << std::endl;
+// Define a struct to represent the data
+struct CityData {
+    int x;
+    int y;
+    int category;
+    string cityName;
 
-    // Print y-axis and grid
-    for (int y = GRID_SIZE - 1; y >= 0; y--) {
-        // Print y-axis label
-        std::cout << "| " << std::setw(2) << y << " ";
+    // Constructor to initialize the struct using a string
+    CityData(const string& str) {
+        // Use stringstream to split the string into components
+        stringstream ss(str);
+        char discard; // to discard '[' and ','
+        ss >> discard >> x >> discard >> y >> discard >> category >> discard >> cityName;
+    }
+};
 
-        // Print grid points
-        for (int x = 0; x < GRID_SIZE; x++) {
-            bool pointExists = false;
-            for (int i = 0; i < numPoints; i++) {
-                if (coordinates[i][0] == x && coordinates[i][1] == y) {
-                    pointExists = true;
-                    break;
-                }
-            }
-            if (pointExists) {
-                std::cout << "* ";
-            } else {
-                std::cout << ". ";
-            }
-        }
-        std::cout << "|" << std::endl;
+// Function to read data and populate structs
+vector<CityData> readCityData() {
+    // Provided data as a vector of strings
+    vector<string> raw_data = {
+        "[1, 1]-3-Big_City",
+        "[1, 2]-3-Big_City",
+        "[1, 3]-3-Big_City",
+        "[2, 1]-3-Big_City",
+        "[2, 2]-3-Big_City",
+        "[2, 3]-3-Big_City",
+        "[2, 7]-2-Mid_City",
+        "[2, 8]-2-Mid_City",
+        "[3, 1]-3-Big_City",
+        "[3, 2]-3-Big_City",
+        "[3, 3]-3-Big_City",
+        "[3, 7]-2-Mid_City",
+        "[3, 8]-2-Mid_City",
+        "[7, 7]-1-Small_City"
+    };
+
+    // Populate structs
+    vector<CityData> cityDataList;
+    for (auto& data : raw_data) {
+        cityDataList.emplace_back(data);
     }
 
-    // Print bottom border
-    std::cout << "+----------------------+" << std::endl;
-
-    // Print x-axis labels
-    std::cout << "  ";
-    for (int x = 0; x < GRID_SIZE; x++) {
-        std::cout << std::setw(2) << x << " ";
-    }
-    std::cout << std::endl;
+    return cityDataList;
 }
 
 int main() {
-    // Example coordinates (you can modify this array)
-    int coordinates[][2] = {{1, 2}, {3, 4}, {6, 8}};
+    // Call the function to read data and populate structs
+    vector<CityData> cities = readCityData();
 
-    // Calculate the number of points in the array
-    int numPoints = sizeof(coordinates) / sizeof(coordinates[0]);
-
-    // Print the grid with coordinates
-    printGrid(coordinates, numPoints);
+    // Display the populated structs
+    for (auto &city : cities) {
+        city.category = abs(city.category);
+        cout << "this is city x->\t" << city.x << "\n";
+        cout << "this is city y->\t" << city.y << "\n";
+        cout << "this is city cat->\t" << city.category << "\n";
+        cout << "this is city name->\t" << city.cityName << "\n";
+        cout << "-----------------\n";
+    }
 
     return 0;
 }

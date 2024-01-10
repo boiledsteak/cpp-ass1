@@ -23,7 +23,98 @@ regex may be system agnostic
 #include <fstream>
 #include <regex>
 #include <vector>
+#include <sstream>
+#include <cstdlib>
+
 using namespace std;
+
+// Define a struct to hold city data
+struct CityData 
+{
+    int x;
+    int y;
+    int category;
+    string cityName;
+
+    // Constructor to initialize the struct
+    CityData(string &str) 
+    {
+        // Use stringstream to split the string into components
+        stringstream ss(str);
+        char discard; // to discard '[' and ','
+        ss >> discard >> x >> discard >> y >> discard >> category >> discard >> cityName;
+    }
+};
+
+vector<CityData> men2reader(string cityfilename)
+{   
+    string lp; //line pointer when reading file
+    fstream cityfile(cityfilename,ios::in);
+    
+    if (cityfile.is_open()) //could add more input validation
+    {
+        // create the struct
+        vector<CityData> cities;
+        //read line by line config file
+        while (getline(cityfile, lp))
+        {
+            // fill the struct
+            cities.emplace_back(lp);
+        }
+        return cities;
+    }
+}
+
+void printGrid(int coordinates[][2], int size) 
+{
+    // Find the dimensions of the grid. //TODO Rmb to cast string to int. Double to int
+    int maxX = 16;
+    int maxY = 16;
+    // set the padding for x axis. Size changes dynamically
+    // minimum values to accommodate for 3 digit x and y axes values
+    int spacingamt = 3; //default minimum 4
+    string border = "#";
+
+    // Print coordinates with y-axis labels
+    for (int y = maxY; y >= 0; --y) 
+    {
+        // print the left #
+        cout << left << setw(spacingamt) << y << border;
+        for (int x = 0; x <= maxX; ++x) 
+        {
+            // print the empty spaces
+            cout << left << setw(spacingamt) << " ";
+            for (int i = 0; i < size; ++i) 
+            {
+                // print coordinates
+                if (coordinates[i][0] == x && coordinates[i][1] == y) 
+                {
+                    cout << left << setw(spacingamt) << "X";
+                }                                   
+            }
+        }
+        // cout << border; //this prints right side border but its senget due to logic error. I gave up
+        cout << "\n";
+    }
+
+    // move x axis lables away from y axis labels. Don't change
+    cout << setw(spacingamt) << " " << setw(spacingamt) << border << setw(border.length()) << " ";
+
+    // print the bottom #
+    for (int i=0; i <= maxX+1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
+
+    // Print x-axis labels
+    cout << setw((spacingamt*2)+border.length()) << " ";// move x axis lables away from y axis labels. Don't change
+    for (int x = 0; x <= maxX; ++x) 
+    {
+        cout << left << setw(spacingamt) << x;
+    }
+    cout <<"\n";
+}
 
 //take in string and delimiter, return vector. From Mr Thien
 vector<string> tokenizeString (string input, string delimiter)
@@ -67,9 +158,6 @@ vector<string> men1(string confilename, vector<string> fivelines)
     vector<string> tokenStringVectorX; //temp holds the GridX_IdxRange=0-8. [0] is GridX..., [1] is 0-8
     vector<string> tokenStringVectorY; //temp holds the GridY_IdxRange=0-8. [0] is GridY..., [1] is 0-8
     
-    
-    
-
     if (confile.is_open()) //could add more input validation
     {
         //read line by line config file
@@ -118,14 +206,6 @@ vector<string> men1(string confilename, vector<string> fivelines)
     return fivelines;
 }
 
-//display city map. Menu option 2
-int men2(vector<string> fivelines)
-{
-    
-
-
-    return 0;
-}
 // @@@@@@@@@@@@ 
 // MAIN
 // @@@@@@@@@@@@
@@ -169,13 +249,24 @@ int main()
             if (!fivelines.empty())
             {
                 xys = xyer(xys, fivelines);
-                cout << "000";
-                //print the first line of #
-                for (int i=0; i <= xys[1]+2; i++)
+               
+                vector<CityData> cities = men2reader(fivelines[2]);
+                // Display the populated structs
+                for (auto &city : cities) 
                 {
-                    cout << "#\t";
+                    city.category = abs(city.category);
+                    cout << "this is city x->\t" << city.x << "\n";
+                    cout << "this is city y->\t" << city.y << "\n";
+                    cout << "this is city cat->\t" << city.category << "\n";
+                    cout << "this is city name->\t" << city.cityName << "\n";
+                    cout << "-----------------\n";
                 }
-                //TODO print the second line
+                // //print the first line of #
+                // for (int i=0; i <= xys[1]+2; i++)
+                // {
+                //     cout << "#\t";
+                // }
+                // //TODO print the second line
 
 			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
             }
@@ -189,8 +280,7 @@ int main()
 
 		if (menuchoice ==8)
 		{
-			// file deepcode ignore DoubleFree: <please specify a reason of ignoring this>
-   delete xys;
+            delete xys;
 			progflow = 0;
 		}
 
