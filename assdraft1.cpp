@@ -28,6 +28,7 @@ regex may be system agnostic
 
 using namespace std;
 
+//TODO  figure out how to make CityData.categories to hold all categories
 // Define a struct to hold city data
 struct CityData 
 {
@@ -265,7 +266,8 @@ int main()
                     coordinates.push_back({city.x,city.y});
                 }                                                                    
                 int test = coordinates.size();
-                // print the grid
+
+                                // print the grid
                 men2printer(coordinates);
                 // //print the first line of #
                 // for (int i=0; i <= xys[1]+2; i++)
