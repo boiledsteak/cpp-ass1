@@ -56,7 +56,7 @@ struct CloudData
     }
 };
 
-vector<CloudData> men3reader(string cloudfilename)
+vector<CloudData> men3reader(string cloudfilename, int option)
 {   
     string lp; //line pointer when reading file
     fstream cloudfile(cloudfilename,ios::in);
@@ -77,20 +77,28 @@ vector<CloudData> men3reader(string cloudfilename)
         // fix cloud cover value to be single digit positive number
         for (auto &cloud : clouds) 
         {
-            cloud.cloud = abs(cloud.cloud) / 10;
-            
+            if (option ==4)
+            {
+                cloud.cloud = abs(cloud.cloud);
+            }
+            else if (option==3)
+            {
+                cloud.cloud = abs(cloud.cloud) / 10;
+            }
             cloud.x++;
         } 
         return clouds;
     }
 }
 
-void men3printer(vector<CloudData> clouds, int *xys)
+void men3printer(vector<CloudData> clouds, int *xys, int option)
 {
     int minX = xys[0];
     int maxX = xys[1];
     int minY = xys[2];
     int maxY = xys[3];
+
+    string lmh; //for option 4
     
     // set the padding for x axis. Size changes dynamically
     // minimum value 3 to accommodate for 3 digit x and y axes values
@@ -119,10 +127,36 @@ void men3printer(vector<CloudData> clouds, int *xys)
             {
                 if (cloud.x == x && cloud.y == y) 
                 {
-                    // print coordinates
-                    cout << right << setw(spacingamt) << cloud.cloud;
-                    printed = true;
-                    break;
+                    if (option == 4)
+                    {
+                        // for option 4. range L
+                        if (cloud.cloud >= 0 && cloud.cloud <= 35)
+                        {
+                            lmh = "L";
+                        }
+                        // for option 4. range M
+                        else if (cloud.cloud >= 36 && cloud.cloud <= 65)
+                        {
+                            lmh = "M";
+                        }
+                        // for option 4. range H
+                        else if (cloud.cloud >= 66 && cloud.cloud <= 100)
+                        {
+                            lmh = "H";
+                        }
+                        // print coordinates
+                        cout << right << setw(spacingamt) << lmh;
+                        printed = true;
+                        break;
+                    }
+
+                    else if (option == 3)
+                    {
+                        // print coordinates
+                        cout << right << setw(spacingamt) << cloud.cloud;
+                        printed = true;
+                        break;
+                    }
                 }
             }
             if (!printed) 
@@ -349,6 +383,7 @@ void menuprinter()
     cout << "1)" << "\tRead in and process a config file\n";
     cout << "2)" << "\tDisplay city map\n";
     cout << "3)" << "\tDisplay cloud coverage (cloudiness index)\n";
+    cout << "4)" << "\tDisplay cloud coverage (LMH symbols)\n";
     cout << "8)" << "\tExit\n";
     cout << "\n\nTell me what you want!\n\n";
 }
@@ -389,6 +424,7 @@ int main()
                 cout << "\n";
                 fivelines = men1(confilename, fivelines);
             }
+            cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
         }
 
         else if (menuchoice ==2)
@@ -404,7 +440,7 @@ int main()
                 // print the grid
                 men2printer(cities, xys);
 
-			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
             }
             else
             {
@@ -420,12 +456,33 @@ int main()
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
                 // create the struct to hold cloudcover.txt data
-                vector<CloudData> clouds = men3reader(fivelines[3]);
+                vector<CloudData> clouds = men3reader(fivelines[3],3);
                 
                 // print the grid
-                men3printer(clouds, xys);
+                men3printer(clouds, xys, 3);
 
-			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+            }
+            else
+            {
+                cout << "config file not processed!\nGoing back to main menu...";
+            }
+        }
+
+        else if (menuchoice==4)
+        {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
+            if (!fivelines.empty())
+            {
+                // get the GridX and GriY
+                xys = xyer(xys, fivelines);
+                // create the struct to hold cloudcover.txt data
+                vector<CloudData> clouds = men3reader(fivelines[3],4);
+                
+                // print the grid
+                men3printer(clouds, xys, 4);
+
+			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
             }
             else
             {
