@@ -22,7 +22,6 @@ regex may be system agnostic
 
 using namespace std;
 
-//TODO  figure out how to make CityData.categories to hold all categories
 // Define a struct to hold city data
 struct CityData 
 {
@@ -40,6 +39,119 @@ struct CityData
         ss >> discard >> x >> discard >> y >> discard >> category >> discard >> cityName;
     }
 };
+
+struct CloudData 
+{
+    int x;
+    int y;
+    int cloud;
+   
+    // Constructor to initialize the struct
+    CloudData(string &strr) 
+    {
+        // Use stringstream to split the string into components
+        stringstream sss(strr);
+        char discard; // to discard '[' and ','
+        sss >> discard >> x >> discard >> y >> discard >> cloud;
+    }
+};
+
+vector<CloudData> men3reader(string cloudfilename)
+{   
+    string lp; //line pointer when reading file
+    fstream cloudfile(cloudfilename,ios::in);
+    
+    if (cloudfile.is_open()) //could add more input validation
+    {
+        // create the struct
+        vector<CloudData> clouds;
+        //read line by line config file
+        while (getline(cloudfile >> ws, lp))
+        {
+            if (lp.size() != 0)
+            {
+                // fill the struct
+                clouds.emplace_back(lp);
+            }
+        }
+        // fix cloud cover value to be single digit positive number
+        for (auto &cloud : clouds) 
+        {
+            cloud.cloud = abs(cloud.cloud) / 10;
+            
+            cloud.x++;
+        } 
+        return clouds;
+    }
+}
+
+void men3printer(vector<CloudData> clouds, int *xys)
+{
+    int minX = xys[0];
+    int maxX = xys[1];
+    int minY = xys[2];
+    int maxY = xys[3];
+    
+    // set the padding for x axis. Size changes dynamically
+    // minimum value 3 to accommodate for 3 digit x and y axes values
+    int spacingamt = 3;
+    string border = "#";
+
+    // move y axis labels away from y axis labels. Don't change. For top border
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
+    // print the top border
+    for (int i = minX; i <= maxX + 1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
+    // Print coordinates with y-axis labels
+    for (int y = maxY; y >= minY; --y) 
+    {
+        // print the left border
+        cout << left << setw(spacingamt) << y << border;
+
+        for (int x = minX+1; x <= maxX; ++x) 
+        {
+            bool printed = false;
+            
+            for (auto &cloud : clouds) 
+            {
+                if (cloud.x == x && cloud.y == y) 
+                {
+                    // print coordinates
+                    cout << right << setw(spacingamt) << cloud.cloud;
+                    printed = true;
+                    break;
+                }
+            }
+            if (!printed) 
+            {
+                cout << setw(spacingamt) << " ";
+            }
+        }
+        // print the right border
+        cout <<right << setw(spacingamt*2)<< border;
+        cout << "\n";
+    }
+    // move x axis labels away from y axis labels. Don't change
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
+    // print the bottom border
+    for (int i = minX; i <= maxX + 1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
+    // move x axis lables away from y axis labels. Don't change
+    cout << setw(spacingamt * 2) << " ";
+
+    for (int x = minX; x <= maxX; ++x) 
+    {
+         // Print x-axis labels
+        cout << left << setw(spacingamt) << x;
+    }
+    cout << "\n";
+}
 
 vector<CityData> men2reader(string cityfilename)
 {   
@@ -69,7 +181,7 @@ vector<CityData> men2reader(string cityfilename)
     }
 }
 
-void men2printer(const vector<CityData> cities, int *xys) 
+void men2printer(vector<CityData> cities, int *xys) 
 {
     int minX = xys[0];
     int maxX = xys[1];
@@ -81,21 +193,21 @@ void men2printer(const vector<CityData> cities, int *xys)
     int spacingamt = 3;
     string border = "#";
 
-    // move x axis labels away from y axis labels. Don't change. For top border
-    cout <<right << setw(spacingamt+1) << border << setw(spacingamt-1) << " " << setw(border.length()) << " ";
+    // move y axis labels away from y axis labels. Don't change. For top border
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
     // print the top border
-    for (int i = 0; i <= maxX + 1; i++)
+    for (int i = minX; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
     // Print coordinates with y-axis labels
-    for (int y = maxY; y >= 0; --y) 
+    for (int y = maxY; y >= minY; --y) 
     {
         // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = 0; x <= maxX; ++x) 
+        for (int x = minX+1; x <= maxX; ++x) 
         {
             bool printed = false;
             
@@ -104,7 +216,7 @@ void men2printer(const vector<CityData> cities, int *xys)
                 if (city.x == x && city.y == y) 
                 {
                     // print coordinates
-                    cout << left << setw(spacingamt) << city.category;
+                    cout << right << setw(spacingamt) << city.category;
                     printed = true;
                     break;
                 }
@@ -115,21 +227,21 @@ void men2printer(const vector<CityData> cities, int *xys)
             }
         }
         // print the right border
-        cout << right << setw(spacingamt+1) << border;
+        cout <<right << setw(spacingamt*2)<< border;
         cout << "\n";
     }
     // move x axis labels away from y axis labels. Don't change
-    cout <<right << setw(spacingamt+1) << border << setw(spacingamt-1) << " " << setw(border.length()) << " ";
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
     // print the bottom border
-    for (int i = 0; i <= maxX + 1; i++)
+    for (int i = minX; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
     // move x axis lables away from y axis labels. Don't change
-    cout << setw((spacingamt * 2) + border.length()) << " ";
+    cout << setw(spacingamt * 2) << " ";
 
-    for (int x = 0; x <= maxX; ++x) 
+    for (int x = minX; x <= maxX; ++x) 
     {
          // Print x-axis labels
         cout << left << setw(spacingamt) << x;
@@ -236,6 +348,7 @@ void menuprinter()
     cout << "Welcome to weather information processing system!\n\n";
     cout << "1)" << "\tRead in and process a config file\n";
     cout << "2)" << "\tDisplay city map\n";
+    cout << "3)" << "\tDisplay cloud coverage (cloudiness index)\n";
     cout << "8)" << "\tExit\n";
     cout << "\n\nTell me what you want!\n\n";
 }
@@ -297,8 +410,27 @@ int main()
             {
                 cout << "config file not processed!\nGoing back to main menu...";
             }
+        }
 
-            
+        else if (menuchoice==3)
+        {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
+            if (!fivelines.empty())
+            {
+                // get the GridX and GriY
+                xys = xyer(xys, fivelines);
+                // create the struct to hold cloudcover.txt data
+                vector<CloudData> clouds = men3reader(fivelines[3]);
+                
+                // print the grid
+                men3printer(clouds, xys);
+
+			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
+            }
+            else
+            {
+                cout << "config file not processed!\nGoing back to main menu...";
+            }
         }
 
 		else if (menuchoice ==8)
