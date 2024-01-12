@@ -82,7 +82,7 @@ void men2printer(const vector<CityData> cities, int *xys)
     string border = "#";
 
     // move x axis labels away from y axis labels. Don't change. For top border
-    cout <<right << setw(spacingamt+2) << border << setw(spacingamt-2) << " " << setw(border.length()) << " ";
+    cout <<right << setw(spacingamt+1) << border << setw(spacingamt-1) << " " << setw(border.length()) << " ";
     // print the top border
     for (int i = 0; i <= maxX + 1; i++)
     {
@@ -93,7 +93,7 @@ void men2printer(const vector<CityData> cities, int *xys)
     for (int y = maxY; y >= 0; --y) 
     {
         // print the left border
-        cout << left << setw(spacingamt) << y << " " << border;
+        cout << left << setw(spacingamt) << y << border;
 
         for (int x = 0; x <= maxX; ++x) 
         {
@@ -115,11 +115,11 @@ void men2printer(const vector<CityData> cities, int *xys)
             }
         }
         // print the right border
-        cout << right << setw(spacingamt) << border;
+        cout << right << setw(spacingamt+1) << border;
         cout << "\n";
     }
     // move x axis labels away from y axis labels. Don't change
-    cout <<right << setw(spacingamt+2) << border << setw(spacingamt-2) << " " << setw(border.length()) << " ";
+    cout <<right << setw(spacingamt+1) << border << setw(spacingamt-1) << " " << setw(border.length()) << " ";
     // print the bottom border
     for (int i = 0; i <= maxX + 1; i++)
     {
@@ -290,12 +290,6 @@ int main()
                 
                 // print the grid
                 men2printer(cities, xys);
-                // //print the first line of #
-                // for (int i=0; i <= xys[1]+2; i++)
-                // {
-                //     cout << "#\t";
-                // }
-                // //TODO print the second line
 
 			    cout << "\nMenu choice 2 complete!\nGoing back to main menu...";
             }
