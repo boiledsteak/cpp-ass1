@@ -56,6 +56,78 @@ struct CloudData
     }
 };
 
+void men7printer(vector<CityData> cities, vector<CloudData> clouds, int *xys) 
+{
+    int minX = xys[0];
+    int maxX = xys[1];
+    int minY = xys[2];
+    int maxY = xys[3];
+    
+    // set the padding for x axis. Size changes dynamically
+    // minimum value 3 to accommodate for 3 digit x and y axes values
+    int spacingamt = 3;
+    string border = "#";
+
+    // move y axis labels away from y axis labels. Don't change. For top border
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
+    // print the top border
+    for (int i = minX; i <= maxX + 1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
+    // Print coordinates with y-axis labels
+    for (int y = maxY; y >= minY; --y) 
+    {
+        // print the left border
+        cout << left << setw(spacingamt) << y << border;
+
+        for (int x = minX+1; x <= maxX; ++x) 
+        {
+            bool printed = false;
+            
+            for (auto &city : cities) 
+            {
+                for (auto &cloud : clouds)
+                {
+                    if (city.x == x && city.y == y) 
+                    {
+                        // print coordinates
+
+                        cout << right << setw(spacingamt) << city.category;
+                        printed = true;
+                        break;
+                    }
+                }
+            }
+            if (!printed) 
+            {
+                cout << setw(spacingamt) << " ";
+            }
+        }
+        // print the right border
+        cout <<right << setw(spacingamt*2)<< border;
+        cout << "\n";
+    }
+    // move x axis labels away from y axis labels. Don't change
+    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
+    // print the bottom border
+    for (int i = minX; i <= maxX + 1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
+    // move x axis lables away from y axis labels. Don't change
+    cout << setw(spacingamt * 2) << " ";
+
+    for (int x = minX; x <= maxX; ++x) 
+    {
+         // Print x-axis labels
+        cout << left << setw(spacingamt) << x;
+    }
+    cout << "\n";
+}
+
 vector<CloudData> men3reader(string cloudfilename, int option)
 {   
     string lp; //line pointer when reading file
@@ -384,6 +456,8 @@ void menuprinter()
     cout << "2)" << "\tDisplay city map\n";
     cout << "3)" << "\tDisplay cloud coverage (cloudiness index)\n";
     cout << "4)" << "\tDisplay cloud coverage (LMH symbols)\n";
+    cout << "5)" << "\tDisplay atmospheric pressure map (pressure index)\n";
+    cout << "6)" << "\tDisplay atmospheric pressure map (LMH symbols)\n";
     cout << "8)" << "\tExit\n";
     cout << "\n\nTell me what you want!\n\n";
 }
@@ -478,6 +552,48 @@ int main()
                 xys = xyer(xys, fivelines);
                 // create the struct to hold cloudcover.txt data
                 vector<CloudData> clouds = men3reader(fivelines[3],4);
+                
+                // print the grid
+                men3printer(clouds, xys, 4);
+
+			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+            }
+            else
+            {
+                cout << "config file not processed!\nGoing back to main menu...";
+            }
+        }
+
+        else if (menuchoice==5)
+        {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
+            if (!fivelines.empty())
+            {
+                // get the GridX and GriY
+                xys = xyer(xys, fivelines);
+                // create the struct to hold cloudcover.txt data
+                vector<CloudData> clouds = men3reader(fivelines[4],3);
+                
+                // print the grid
+                men3printer(clouds, xys, 3);
+
+			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+            }
+            else
+            {
+                cout << "config file not processed!\nGoing back to main menu...";
+            }
+        }
+
+        else if (menuchoice==6)
+        {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
+            if (!fivelines.empty())
+            {
+                // get the GridX and GriY
+                xys = xyer(xys, fivelines);
+                // create the struct to hold cloudcover.txt data
+                vector<CloudData> clouds = men3reader(fivelines[4],4);
                 
                 // print the grid
                 men3printer(clouds, xys, 4);
