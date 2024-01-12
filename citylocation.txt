@@ -12,7 +12,7 @@
 [3, 7]-2-Mid_City
 [3, 8]-2-Mid_City
 [7, 7]-1-Small_City
-
+[15, 7]-1-Small_City
 
 
             

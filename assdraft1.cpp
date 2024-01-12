@@ -3,13 +3,6 @@
 Timothy Mah C++ module assignment
 2 Jan 2024
 
-references
-https://www.tutorialspoint.com/how-to-read-a-text-file-with-cplusplus
-https://stackoverflow.com/questions/28338775/what-is-iosiniosout
-https://www.softwaretestinghelp.com/regex-in-cpp/
-possible extra feature
-https://github.com/reo7sp/tgbot-cpp
-
 issues
 regex may be system agnostic
 
@@ -25,6 +18,7 @@ regex may be system agnostic
 #include <vector>
 #include <sstream>
 #include <cstdlib>
+#include <limits>
 
 using namespace std;
 
@@ -65,44 +59,68 @@ vector<CityData> men2reader(string cityfilename)
                 cities.emplace_back(lp);
             }
         }
+        // fix category to be positive number
+        for (auto &city : cities) 
+        {
+            city.category = abs(city.category);
+            city.x++;
+        } 
         return cities;
     }
 }
 
-void men2printer(const vector<vector<int>> &coordinates) 
+void men2printer(const vector<CityData> cities, int *xys) 
 {
-    int maxX = 16;
-    int maxY = 16;
+    int minX = xys[0];
+    int maxX = xys[1];
+    int minY = xys[2];
+    int maxY = xys[3];
+    
     // set the padding for x axis. Size changes dynamically
     // minimum value 3 to accommodate for 3 digit x and y axes values
     int spacingamt = 3;
     string border = "#";
+
+    // move x axis labels away from y axis labels. Don't change. For top border
+    cout <<right << setw(spacingamt+2) << border << setw(spacingamt-2) << " " << setw(border.length()) << " ";
+    // print the top border
+    for (int i = 0; i <= maxX + 1; i++)
+    {
+        cout << left << setw(spacingamt) << border;
+    }
+    cout << "\n";
     // Print coordinates with y-axis labels
     for (int y = maxY; y >= 0; --y) 
     {
-        // print the left #
-        cout << left << setw(spacingamt) << y << border;
+        // print the left border
+        cout << left << setw(spacingamt) << y << " " << border;
 
         for (int x = 0; x <= maxX; ++x) 
         {
-            // print the empty spaces
-            cout << left << setw(spacingamt) << " ";
-
-            for (const auto& coord : coordinates) 
+            bool printed = false;
+            
+            for (auto &city : cities) 
             {
-                if (coord[0] == x && coord[1] == y) 
+                if (city.x == x && city.y == y) 
                 {
                     // print coordinates
-                    cout << left << setw(spacingamt) << "X";
+                    cout << left << setw(spacingamt) << city.category;
+                    printed = true;
+                    break;
                 }
             }
+            if (!printed) 
+            {
+                cout << setw(spacingamt) << " ";
+            }
         }
-        // cout << border; //this prints right side border but its senget due to logic error. I gave up
+        // print the right border
+        cout << right << setw(spacingamt) << border;
         cout << "\n";
     }
-     // move x axis labels away from y axis labels. Don't change
-    cout << setw(spacingamt) << " " << setw(spacingamt) << border << setw(border.length()) << " ";
-    // print the bottom #
+    // move x axis labels away from y axis labels. Don't change
+    cout <<right << setw(spacingamt+2) << border << setw(spacingamt-2) << " " << setw(border.length()) << " ";
+    // print the bottom border
     for (int i = 0; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
@@ -203,10 +221,23 @@ vector<string> men1(string confilename, vector<string> fivelines)
     }
     else
     {
-        cout << "\nfile not found";
+        cout << "\nfile not found :( Please try again...\n\n";
     }
 
     return fivelines;
+}
+
+void menuprinter()
+{
+    cout << "\n\n\n";
+    cout << "Student ID:"  << "\t10258663\n";
+    cout << "Student name:"  << "\tTimothy Mah\n";
+    cout << "------------------------------------------------------\n";
+    cout << "Welcome to weather information processing system!\n\n";
+    cout << "1)" << "\tRead in and process a config file\n";
+    cout << "2)" << "\tDisplay city map\n";
+    cout << "8)" << "\tExit\n";
+    cout << "\n\nTell me what you want!\n\n";
 }
 
 // @@@@@@@@@@@@ 
@@ -224,51 +255,41 @@ int main()
 
     while (progflow == 1)
     {
-        cout << "\n\n\n";
-        cout << "Student ID:"  << "\t10258663\n";
-        cout << "Student name:"  << "\tTimothy Mah\n";
-        cout << "------------------------------------------------------\n";
-        cout << "Welcome to weather information processing system!\n\n";
-        cout << "1)" << "\tRead in and process a config file\n";
-		cout << "2)" << "\tDisplay city map\n";
-		cout << "8)" << "\tExit\n";
-        cout << "\n\nTell me what you want!\n\n";
-        cin >> menuchoice;
-        cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
-
+        menuprinter();
+        // Check if cin expects an integer
+        while (!(cin >> menuchoice)) 
+        {
+            cin.clear();  // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discard invalid input
+            cout << "Invalid input! Please try again...\n";
+            menuprinter();
+        }      
+        
         if (menuchoice ==1)
         {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
             string confilename;
-            
-            cout << "Please enter config file name:";
-            cin >> confilename;
-			cout << "\n";
-
-            fivelines = men1(confilename, fivelines);
+            while (fivelines.empty())
+            {
+                cout << "Please enter config file name:";
+                cin >> confilename;
+                cout << "\n";
+                fivelines = men1(confilename, fivelines);
+            }
         }
 
-        if (menuchoice ==2)
+        else if (menuchoice ==2)
         {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
             if (!fivelines.empty())
             {
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
                 // create the struct to hold citylocation.txt data
                 vector<CityData> cities = men2reader(fivelines[2]);
-                // hold all the coordinates in vector
-                vector<vector<int>> coordinates;
-     
-                cout << "\nthis is the cities vector size->\t" << cities.size() << "\n";
-                //fill the coordinates vector with coordinates from the cities struct vector
-                for (auto &city : cities) 
-                {
-                    city.category = abs(city.category);
-                    coordinates.push_back({city.x,city.y});
-                }                                                                    
-                int test = coordinates.size();
-
-                                // print the grid
-                men2printer(coordinates);
+                
+                // print the grid
+                men2printer(cities, xys);
                 // //print the first line of #
                 // for (int i=0; i <= xys[1]+2; i++)
                 // {
@@ -286,11 +307,16 @@ int main()
             
         }
 
-		if (menuchoice ==8)
+		else if (menuchoice ==8)
 		{
             delete xys;
 			progflow = 0;
 		}
+
+        else
+        {
+            cout << "\nWe don't have that option :( Please try again...\n\n";
+        }
 
         cout << "\n\n\n";
 
