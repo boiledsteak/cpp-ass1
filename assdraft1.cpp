@@ -63,66 +63,69 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, int *xys)
     int minY = xys[2];
     int maxY = xys[3];
     
-    // set the padding for x axis. Size changes dynamically
-    // minimum value 3 to accommodate for 3 digit x and y axes values
     int spacingamt = 3;
     string border = "#";
 
-    // move y axis labels away from y axis labels. Don't change. For top border
-    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
-    // print the top border
+    cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
     for (int i = minX; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
-    // Print coordinates with y-axis labels
+
     for (int y = maxY; y >= minY; --y) 
     {
-        // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX; ++x) 
+        for (int x = minX + 1; x <= maxX; ++x) 
         {
             bool printed = false;
-            
+
             for (auto &city : cities) 
             {
-                for (auto &cloud : clouds)
+                if (city.x == x && city.y == y) 
                 {
-                    if (city.x == x && city.y == y) 
-                    {
-                        // print coordinates
+                    cout << right << setw(spacingamt) << city.category;
+                    printed = true;
+                    break;
+                }
+            }
 
-                        cout << right << setw(spacingamt) << city.category;
-                        printed = true;
+            if (!printed) 
+            {
+                // Check for surrounding coordinates
+                bool surroundPrinted = false;
+                for (auto &city : cities) 
+                {
+                    if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1) 
+                    {
+                        cout << right << setw(spacingamt) << "X";
+                        surroundPrinted = true;
                         break;
                     }
                 }
-            }
-            if (!printed) 
-            {
-                cout << setw(spacingamt) << " ";
+
+                if (!surroundPrinted) 
+                {
+                    cout << setw(spacingamt) << " ";
+                }
             }
         }
-        // print the right border
-        cout <<right << setw(spacingamt*2)<< border;
+
+        cout << right << setw(spacingamt * 2) << border;
         cout << "\n";
     }
-    // move x axis labels away from y axis labels. Don't change
-    cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
-    // print the bottom border
+
+    cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
     for (int i = minX; i <= maxX + 1; i++)
     {
         cout << left << setw(spacingamt) << border;
     }
     cout << "\n";
-    // move x axis lables away from y axis labels. Don't change
-    cout << setw(spacingamt * 2) << " ";
 
+    cout << setw(spacingamt * 2) << " ";
     for (int x = minX; x <= maxX; ++x) 
     {
-         // Print x-axis labels
         cout << left << setw(spacingamt) << x;
     }
     cout << "\n";
@@ -174,8 +177,8 @@ void men3printer(vector<CloudData> clouds, int *xys, int option)
     
     // set the padding for x axis. Size changes dynamically
     // minimum value 3 to accommodate for 3 digit x and y axes values
-    int spacingamt = 3;
-    string border = "#";
+    int spacingamt =3;
+    char border = '#';
 
     // move y axis labels away from y axis labels. Don't change. For top border
     cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
@@ -297,7 +300,7 @@ void men2printer(vector<CityData> cities, int *xys)
     // set the padding for x axis. Size changes dynamically
     // minimum value 3 to accommodate for 3 digit x and y axes values
     int spacingamt = 3;
-    string border = "#";
+    char border = '#';
 
     // move y axis labels away from y axis labels. Don't change. For top border
     cout <<left << setw(spacingamt) << " " << setw(spacingamt) << border;
@@ -469,6 +472,7 @@ void menuprinter()
     cout << "4)" << "\tDisplay cloud coverage (LMH symbols)\n";
     cout << "5)" << "\tDisplay atmospheric pressure map (pressure index)\n";
     cout << "6)" << "\tDisplay atmospheric pressure map (LMH symbols)\n";
+    cout << "7)" << "\tShow weather forecast summary report\n";
     cout << "8)" << "\tExit\n";
     cout << "\n\nTell me what you want!\n\n";
 }
