@@ -379,11 +379,22 @@ int *xyer(int *xys, vector<string> fivelines)
 {
     vector<string> tempx = tokenizeString(fivelines[0], "-");
     vector<string> tempy = tokenizeString(fivelines[1], "-");
-
-    xys[0] = stoi(tempx[0]);
-    xys[1] = stoi(tempx[1]);
-    xys[2] = stoi(tempy[0]);
-    xys[3] = stoi(tempy[1]);
+    // check if x and y are positive integers
+    try
+    {
+        xys[0] = stoi(tempx[0]);
+        xys[1] = stoi(tempx[1]);
+        xys[2] = stoi(tempy[0]);
+        xys[3] = stoi(tempy[1]);
+    }
+    catch(const exception &e)
+    {
+        cerr << e.what() << '\n';
+        delete xys;
+        int *xys = new int[3];
+    }
+    
+    
         
     return xys;
 }
@@ -508,6 +519,7 @@ int main()
             {
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
+                
                 // create the struct to hold citylocation.txt data
                 vector<CityData> cities = men2reader(fivelines[2]);
                 
