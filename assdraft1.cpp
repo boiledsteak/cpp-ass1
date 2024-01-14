@@ -22,7 +22,14 @@ regex may be system agnostic
 
 using namespace std;
 
-// Define a struct to hold city data
+struct RenderedCity 
+{
+    string name;
+    string category;
+    vector<int> pressure;
+    vector<int> cloud;
+};
+
 struct CityData 
 {
     int x;
@@ -56,8 +63,10 @@ struct CloudData
     }
 };
 
-void men7printer(vector<CityData> cities, vector<CloudData> clouds, int *xys) 
+void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
 {
+    // vector<RenderedCity> renderedcities;
+
     int minX = xys[0];
     int maxX = xys[1];
     int minY = xys[2];
@@ -80,16 +89,38 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, int *xys)
         for (int x = minX + 1; x <= maxX; ++x) 
         {
             bool printed = false;
-
-            for (auto &city : cities) 
-            {
-                if (city.x == x && city.y == y) 
-                {
-                    cout << right << setw(spacingamt) << city.category;
-                    printed = true;
-                    break;
-                }
-            }
+            
+				
+			for (auto &city : cities)
+			{
+				for (auto &cloud : clouds)
+				{
+					if (city.x == x && city.y == y && city.x == cloud.x && city.y == cloud.y) 
+					{
+						for (auto &p : pressure)
+						{
+							if (p.x == x && p.y == y)
+							{
+								cout << right << setw(spacingamt) << p.cloud;
+								// RenderedCity rc;
+								// rc.name = city.cityName;
+								// rc.category = city.category;
+								// rc.cloud.push_back(cloud.cloud);
+								// rc.pressure.push_back(p.cloud);
+								printed = true;
+								break;
+							}
+							
+						}
+						break;
+						
+					}
+				}			
+			}
+					
+				
+                
+            
 
             if (!printed) 
             {
@@ -97,12 +128,14 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, int *xys)
                 bool surroundPrinted = false;
                 for (auto &city : cities) 
                 {
-                    if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1) 
-                    {
-                        cout << right << setw(spacingamt) << "X";
-                        surroundPrinted = true;
-                        break;
-                    }
+					
+					if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
+					{
+						cout << right << setw(spacingamt) << "X";
+						surroundPrinted = true;
+						break;
+					}  
+					                  
                 }
 
                 if (!surroundPrinted) 
@@ -382,23 +415,12 @@ int *xyer(int *xys, vector<string> fivelines)
 {
     vector<string> tempx = tokenizeString(fivelines[0], "-");
     vector<string> tempy = tokenizeString(fivelines[1], "-");
-    // check if x and y are positive integers
-    try
-    {
-        xys[0] = stoi(tempx[0]);
-        xys[1] = stoi(tempx[1]);
-        xys[2] = stoi(tempy[0]);
-        xys[3] = stoi(tempy[1]);
-    }
-    catch(const exception &e)
-    {
-        cerr << e.what() << '\n';
-        delete xys;
-        int *xys = new int[3];
-    }
     
-    
-        
+    xys[0] = stoi(tempx[0]);
+    xys[1] = stoi(tempx[1]);
+    xys[2] = stoi(tempy[0]);
+    xys[3] = stoi(tempy[1]);
+           
     return xys;
 }
 
@@ -515,7 +537,7 @@ int main()
                 cout << "\n";
                 fivelines = men1(confilename, fivelines);
             }
-            cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+            cout << "\nMenu choice "<< menuchoice << " completed! Going back to main menu...\n";
         }
 
         else if (menuchoice ==2)
@@ -591,7 +613,7 @@ int main()
                 // create the struct to hold cloudcover.txt data
                 vector<CloudData> clouds = men3reader(fivelines[3],4);
                 
-                // print the grid
+                // print the grid in LMH
                 men3printer(clouds, xys, 4);
 
 			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
@@ -619,11 +641,11 @@ int main()
             {
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
-                // create the struct to hold cloudcover.txt data
-                vector<CloudData> clouds = men3reader(fivelines[4],3);
+                // create the struct to hold pressure.txt data
+                vector<CloudData> pressure = men3reader(fivelines[4],3);
                 
                 // print the grid
-                men3printer(clouds, xys, 3);
+                men3printer(pressure, xys, 3);
 
 			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
                 cin.ignore();
@@ -651,10 +673,10 @@ int main()
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
                 // create the struct to hold pressure.txt data
-                vector<CloudData> clouds = men3reader(fivelines[4],4);
+                vector<CloudData> pressure = men3reader(fivelines[4],4);
                 
-                // print the grid
-                men3printer(clouds, xys, 4);
+                // print the grid in LMH
+                men3printer(pressure, xys, 4);
 
 			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
                 cin.ignore();
@@ -684,10 +706,12 @@ int main()
                 // create the struct to hold citylocation.txt data
                 vector<CityData> cities = men2reader(fivelines[2]);
                 // create the struct to hold cloudcover.txt data
-                vector<CloudData> clouds = men3reader(fivelines[3],3);
+                vector<CloudData> clouds = men3reader(fivelines[3],4);
+				// create the struct to hold pressure.txt data
+                vector<CloudData> pressure = men3reader(fivelines[4],4);
                 
                 // print the grid
-                men7printer(cities, clouds, xys);
+                men7printer(cities, clouds, pressure, xys);
 
 			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
                 cin.ignore();
