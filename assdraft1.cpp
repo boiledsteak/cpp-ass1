@@ -484,7 +484,9 @@ int main()
 {
     int progflow = 1;
     int menuchoice = 0;
-    
+    string goback="nothing";
+    string gobackmsg = " complete!\n Press ENTER to go back to main menu...";
+    string noconfigmsg = "config file not processed!\nGoing back to main menu...";
     
     vector<string> fivelines; //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
     // int lowerx, upperx, lowery, uppery; //0-8 for gridX and 0-8 for GridY
@@ -513,7 +515,7 @@ int main()
                 cout << "\n";
                 fivelines = men1(confilename, fivelines);
             }
-            cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+            cout << "\nMenu choice "<< menuchoice <<gobackmsg;
         }
 
         else if (menuchoice ==2)
@@ -530,11 +532,21 @@ int main()
                 // print the grid
                 men2printer(cities, xys);
 
-			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
             }
             else
             {
-                cout << "config file not processed!\nGoing back to main menu...";
+                cout << noconfigmsg;
             }
         }
 
@@ -551,11 +563,21 @@ int main()
                 // print the grid
                 men3printer(clouds, xys, 3);
 
-			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
             }
             else
             {
-                cout << "config file not processed!\nGoing back to main menu...";
+                cout << noconfigmsg;
             }
         }
 
@@ -572,11 +594,21 @@ int main()
                 // print the grid
                 men3printer(clouds, xys, 4);
 
-			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
             }
             else
             {
-                cout << "config file not processed!\nGoing back to main menu...";
+                cout << noconfigmsg;
             }
         }
 
@@ -593,11 +625,21 @@ int main()
                 // print the grid
                 men3printer(clouds, xys, 3);
 
-			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
             }
             else
             {
-                cout << "config file not processed!\nGoing back to main menu...";
+                cout << noconfigmsg;
             }
         }
 
@@ -608,19 +650,63 @@ int main()
             {
                 // get the GridX and GriY
                 xys = xyer(xys, fivelines);
-                // create the struct to hold cloudcover.txt data
+                // create the struct to hold pressure.txt data
                 vector<CloudData> clouds = men3reader(fivelines[4],4);
                 
                 // print the grid
                 men3printer(clouds, xys, 4);
 
-			    cout << "\nMenu choice "<< menuchoice <<" complete!\nGoing back to main menu...";
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
             }
             else
             {
-                cout << "config file not processed!\nGoing back to main menu...";
+                cout << noconfigmsg;
             }
         }
+
+        else if (menuchoice==7)
+        {
+            cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
+            if (!fivelines.empty())
+            {
+                // get the GridX and GriY
+                xys = xyer(xys, fivelines);
+                // create the struct to hold citylocation.txt data
+                vector<CityData> cities = men2reader(fivelines[2]);
+                // create the struct to hold cloudcover.txt data
+                vector<CloudData> clouds = men3reader(fivelines[3],3);
+                
+                // print the grid
+                men7printer(cities, clouds, xys);
+
+			    cout << "\nMenu choice "<< menuchoice <<gobackmsg;
+                cin.ignore();
+                // Loop until the Enter key is pressed
+                while (true) 
+                {
+                    char ch = cin.get(); // Get a character from input
+                    if (ch == '\n') {
+                        // Enter key pressed, break out of the loop
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                cout << noconfigmsg;
+            }
+        }
+
 
 		else if (menuchoice ==8)
 		{
