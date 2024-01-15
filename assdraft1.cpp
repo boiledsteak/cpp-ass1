@@ -76,6 +76,9 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     int spacingamt = 3;
     string border = "#";
 
+    // Vector to store coordinates of "X"
+    vector<pair<int, int>> xCoordinates;
+
     cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
     for (int i = minX; i <= maxX + 1; i++)
     {
@@ -132,7 +135,9 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 					
 					if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
 					{
-						cout << right << setw(spacingamt) << "X";
+						// Store coordinates of "X"
+                        xCoordinates.push_back(make_pair(x, y));
+                        cout << right << setw(spacingamt) << "X";
 						surroundPrinted = true;
 						break;
 					}  
@@ -163,6 +168,13 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
         cout << left << setw(spacingamt) << x;
     }
     cout << "\n";
+
+    // see whats in xCooordinates
+    cout << "\n\n\n\n\n these are the coords\n";
+    for (auto &c : xCoordinates)
+    {
+        cout << c.first << "\t" << c.second << "\n";
+    }
 }
 
 vector<CloudData> men3reader(string cloudfilename, int option)
