@@ -30,6 +30,7 @@ struct RenderedCity
     vector<int> cloud;
 };
 
+// store structs all in one .h file . Rmb to use header guard
 struct CityData 
 {
     int x;
@@ -86,7 +87,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     {
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX + 1; x <= maxX; ++x) 
+        for (int x = minX+1; x <= maxX+1; ++x) 
         {
             bool printed = false;
             
@@ -145,7 +146,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
             }
         }
 
-        cout << right << setw(spacingamt * 2) << border;
+        cout << right << setw(spacingamt) << border;
         cout << "\n";
     }
 
@@ -227,7 +228,7 @@ void men3printer(vector<CloudData> clouds, int *xys, int option)
         // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX; ++x) 
+        for (int x = minX+1; x <= maxX+1; ++x) 
         {
             bool printed = false;
             
@@ -273,7 +274,7 @@ void men3printer(vector<CloudData> clouds, int *xys, int option)
             }
         }
         // print the right border
-        cout <<right << setw(spacingamt*2)<< border;
+        cout <<right << setw(spacingamt)<< border;
         cout << "\n";
     }
     // move x axis labels away from y axis labels. Don't change
@@ -349,7 +350,7 @@ void men2printer(vector<CityData> cities, int *xys)
         // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX; ++x) 
+        for (int x = minX+1; x <= maxX+1; ++x) 
         {
             bool printed = false;
             
@@ -369,7 +370,7 @@ void men2printer(vector<CityData> cities, int *xys)
             }
         }
         // print the right border
-        cout <<right << setw(spacingamt*2)<< border;
+        cout <<right << setw(spacingamt)<< border;
         cout << "\n";
     }
     // move x axis labels away from y axis labels. Don't change
