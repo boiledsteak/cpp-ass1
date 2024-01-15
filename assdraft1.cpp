@@ -58,18 +58,19 @@ struct CloudData
 
 void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
 {
-    // vector<RenderedCity> renderedcities;
-
     int minX = xys[0];
     int maxX = xys[1];
     int minY = xys[2];
     int maxY = xys[3];
-    
-    int spacingamt = 3;
-    string border = "#";
+
+    int innerp;
+    int outerp; //should be 314 with default values
+    int innerc;
+    int outerc;
 
     // Vector to store coordinates of "X"
     vector<pair<int, int>> xCoordinates;
+   //-------------------- END processing X
     for (int y = maxY; y >= minY; --y) 
     {
         for (int x = minX; x <= maxX; ++x) 
@@ -86,8 +87,10 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 							if (p.x == x && p.y == y)
 							{
 								printed = true;
+                                innerp += p.cloud;
 								break;
-							}	
+							}
+
 						}
 						break;
 						
@@ -112,15 +115,8 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
             }
         }
     }
-    // see whats in xCooordinates
-    cout << "\n\n\n\n\nthese are the surrounding coords\n";
-    for (auto &c : xCoordinates)
-    {
-        cout << c.first << "\t" << c.second << "\n";
-    }
-
-    // Print pressure values based on coordinates in xCoordinates
-    cout << "\n\n\n\nPressure values at 'X' coordinates: \n";
+    //-------------------- END processing X
+    // sum surrounding pressure value
     for (const auto &coord : xCoordinates) 
     {
         for (const auto &p : pressure) 
@@ -128,9 +124,23 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
             if (p.x == coord.first && p.y == coord.second) 
             {
                 cout << "(" << coord.first << "," << coord.second << "): " << p.cloud << " \n";
+                outerp = outerp + p.cloud;
             }
         }
     }
+    // // sum surrounding cloud cover value
+    // for (const auto &coord : xCoordinates) 
+    // {
+    //     for (const auto &c : clouds) 
+    //     {
+    //         if (c.x == coord.first && c.y == coord.second) 
+    //         {
+    //             outerc += c.cloud;
+    //         }
+    //     }
+    // }
+
+    
 }
 
 vector<CloudData> men3reader(string cloudfilename, int option)
