@@ -22,14 +22,6 @@ regex may be system agnostic
 
 using namespace std;
 
-struct RenderedCity 
-{
-    string name;
-    string category;
-    vector<int> pressure;
-    vector<int> cloud;
-};
-
 // store structs all in one .h file . Rmb to use header guard
 struct CityData 
 {
@@ -78,23 +70,11 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 
     // Vector to store coordinates of "X"
     vector<pair<int, int>> xCoordinates;
-
-    cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
-    for (int i = minX; i <= maxX + 1; i++)
-    {
-        cout << left << setw(spacingamt) << border;
-    }
-    cout << "\n";
-
     for (int y = maxY; y >= minY; --y) 
     {
-        cout << left << setw(spacingamt) << y << border;
-
         for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
-            
-				
 			for (auto &city : cities)
 			{
 				for (auto &cloud : clouds)
@@ -105,74 +85,35 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 						{
 							if (p.x == x && p.y == y)
 							{
-								cout << right << setw(spacingamt) << p.x;
-								// RenderedCity rc;
-								// rc.name = city.cityName;
-								// rc.category = city.category;
-								// rc.cloud.push_back(cloud.cloud);
-								// rc.pressure.push_back(p.cloud);
 								printed = true;
 								break;
-							}
-							
+							}	
 						}
 						break;
 						
 					}
 				}			
-			}
-					
-				
-                
+			}		
             
-
             if (!printed) 
             {
                 // Check for surrounding coordinates
                 bool surroundPrinted = false;
                 for (auto &city : cities) 
                 {
-					
 					if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
 					{
 						// Store coordinates of "X"
                         xCoordinates.push_back(make_pair(x, y));
-                        // cout << right << setw(spacingamt) << "X";
 						surroundPrinted = true;
 						break;
-					}  
-					                  
-                }
-
-                
-
-                if (!surroundPrinted) 
-                {
-                    cout << setw(spacingamt) << " ";
+					}                 
                 }
             }
         }
-
-        cout << right << setw(spacingamt) << border;
-        cout << "\n";
     }
-
-    cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
-    for (int i = minX; i <= maxX + 1; i++)
-    {
-        cout << left << setw(spacingamt) << border;
-    }
-    cout << "\n";
-
-    cout << setw(spacingamt * 2) << " ";
-    for (int x = minX; x <= maxX; ++x) 
-    {
-        cout << left << setw(spacingamt) << x;
-    }
-    cout << "\n";
-
     // see whats in xCooordinates
-    cout << "\n\n\n\n\n these are the coords\n";
+    cout << "\n\n\n\n\nthese are the surrounding coords\n";
     for (auto &c : xCoordinates)
     {
         cout << c.first << "\t" << c.second << "\n";
