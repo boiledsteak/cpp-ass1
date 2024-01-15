@@ -90,7 +90,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     {
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX+1; ++x) 
+        for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
             
@@ -105,7 +105,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 						{
 							if (p.x == x && p.y == y)
 							{
-								cout << right << setw(spacingamt) << p.cloud;
+								cout << right << setw(spacingamt) << p.x;
 								// RenderedCity rc;
 								// rc.name = city.cityName;
 								// rc.category = city.category;
@@ -137,12 +137,14 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 					{
 						// Store coordinates of "X"
                         xCoordinates.push_back(make_pair(x, y));
-                        cout << right << setw(spacingamt) << "X";
+                        // cout << right << setw(spacingamt) << "X";
 						surroundPrinted = true;
 						break;
 					}  
 					                  
                 }
+
+                
 
                 if (!surroundPrinted) 
                 {
@@ -175,6 +177,19 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     {
         cout << c.first << "\t" << c.second << "\n";
     }
+
+    // Print pressure values based on coordinates in xCoordinates
+    cout << "\n\n\n\nPressure values at 'X' coordinates: \n";
+    for (const auto &coord : xCoordinates) 
+    {
+        for (const auto &p : pressure) 
+        {
+            if (p.x == coord.first && p.y == coord.second) 
+            {
+                cout << "(" << coord.first << "," << coord.second << "): " << p.cloud << " \n";
+            }
+        }
+    }
 }
 
 vector<CloudData> men3reader(string cloudfilename, int option)
@@ -206,7 +221,7 @@ vector<CloudData> men3reader(string cloudfilename, int option)
             {
                 cloud.cloud = abs(cloud.cloud) / 10;
             }
-            cloud.x++;
+            
         } 
         return clouds;
     }
@@ -240,7 +255,7 @@ void men3printer(vector<CloudData> clouds, int *xys, int option)
         // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX+1; ++x) 
+        for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
             
@@ -330,7 +345,7 @@ vector<CityData> men2reader(string cityfilename)
         for (auto &city : cities) 
         {
             city.category = abs(city.category);
-            city.x++;
+            
         } 
         return cities;
     }
@@ -362,7 +377,7 @@ void men2printer(vector<CityData> cities, int *xys)
         // print the left border
         cout << left << setw(spacingamt) << y << border;
 
-        for (int x = minX+1; x <= maxX+1; ++x) 
+        for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
             

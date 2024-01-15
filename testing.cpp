@@ -109,7 +109,19 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
         cout << "\n";
     }
 
-    // Do something with the xCoordinates vector if needed...
+    // Print pressure values based on coordinates in xCoordinates
+    cout << "Pressure values at 'X' coordinates: ";
+    for (const auto &coord : xCoordinates) 
+    {
+        for (const auto &p : pressure) 
+        {
+            if (p.x == coord.first && p.y == coord.second) 
+            {
+                cout << "(" << coord.first << "," << coord.second << "): " << p.cloud << " ";
+            }
+        }
+    }
+    cout << "\n";
 
     cout << left << setw(spacingamt) << " " << setw(spacingamt) << border;
     for (int i = minX; i <= maxX + 1; i++)
