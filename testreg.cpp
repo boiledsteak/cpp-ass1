@@ -1,36 +1,31 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <iomanip>  // Added for setprecision
+// Set to keep track of processed city categories
+unordered_set<int> processedCities;
 
-using namespace std;
+// ...
 
-// ... (Same code as provided previously)
-
-void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
+// Print average cloud cover for each city
+cout << "Average Cloud Cover for each city:\n";
+for (const auto &ac : avgc) 
 {
-    // ... (Same code as provided previously)
-
-    // Find average pressure and cloud cover
-    for (const auto &count : printedCounts) 
-    {
-        avgp[count.first] = static_cast<double>(totalp[count.first]) / count.second;
-        avgc[count.first] = static_cast<double>(totalc[count.first]) / count.second;
-    }
-
-    // Print average pressure for each city
-    cout << "Average Pressure for each city:\n";
-    for (const auto &ap : avgp) 
-    {
-        cout << "City " << ap.first << ": " << fixed << setprecision(2) << ap.second << endl;
-    }
-
-    // Print average cloud cover for each city
-    cout << "Average Cloud Cover for each city:\n";
-    for (const auto &ac : avgc) 
+    // Check if the city category has already been processed
+    if (processedCities.find(ac.first) == processedCities.end()) 
     {
         cout << "City " << ac.first << ": " << fixed << setprecision(2) << ac.second << endl;
+        processedCities.insert(ac.first);
     }
 }
 
-// ... (Same code as provided previously)
+// ...
+
+// Print report
+for (auto &city : cities)
+{
+    // Check if the city category has already been processed
+    if (processedCities.find(city.category) == processedCities.end()) 
+    {
+        cout << setw(15) << "City name: " << ": " << city.cityName << "\n";
+        cout << setw(15) << "City ID: " << ": " << city.category << "\n";
+        cout << setw(18) << "Avg cloud cover "<< left << setw(7) << "(ACC)" <<": " << fixed << setprecision(2) << avgc[city.category] << " " << lmher(avgc[city.category]) << "\n\n";
+        processedCities.insert(city.category);
+    }
+}
