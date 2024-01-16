@@ -51,11 +51,11 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     int minY = xys[2];
     int maxY = xys[3];
 
-    // Vector to store coordinates of "X" along with city category
-    vector<CoordinatesWithCategory> xCoordinates;
+    int innerp = 0;
+    int outerp = 0; // should be 314 with default values
 
-    // Map to store outerp sum for each category
-    unordered_map<int, int> categorySums;
+    // Unordered map to store innerp values for each category
+    unordered_map<int, int> innerpByCategory;
 
     //-------------------- END processing X
     for (int y = maxY; y >= minY; --y) 
@@ -75,6 +75,10 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                             if (p.x == x && p.y == y)
                             {
                                 printed = true;
+                                innerp += p.cloud;
+
+                                // Store innerp value in the unordered_map for the corresponding category
+                                innerpByCategory[city.category] += p.cloud;
                                 break;
                             }
                         }
@@ -92,7 +96,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                     if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
                     {
                         // Store coordinates of "X" along with city category
-                        xCoordinates.push_back(CoordinatesWithCategory(x, y, city.category));
+                        outerp += p.cloud;
                         surroundPrinted = true;
                         break;
                     }                 
@@ -102,21 +106,14 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     }
     //-------------------- END processing X
 
-    // Sum surrounding pressure value for each category
-    for (const auto &coord : xCoordinates) 
-    {
-        for (const auto &p : pressure) 
-        {
-            if (p.x == coord.x && p.y == coord.y) 
-            {
-                categorySums[coord.category] += p.cloud;
-            }
-        }
-    }
+    // Output or use the summed values as needed...
+    cout << "Inner Pressure: " << innerp << endl;
+    cout << "Outer Pressure: " << outerp << endl;
 
-    // Print the outerp sum for each category
-    for (const auto &pair : categorySums) 
+    // Print innerp values for each category
+    cout << "Inner Pressure by Category:\n";
+    for (const auto &entry : innerpByCategory) 
     {
-        cout << "Category " << pair.first << ": " << pair.second << endl;
+        cout << "Category " << entry.first << ": " << entry.second << endl;
     }
 }

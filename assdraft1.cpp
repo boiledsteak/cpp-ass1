@@ -76,9 +76,11 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 
     // Vector to store coordinates of "X" along with city category
     vector<surrounddata> surrounds;
+    
 
-    // Map to store outerp sum for each category
-    unordered_map<int, int> citysums;
+    // dictionary to store surrounding and actual sum of pressue for each city
+    unordered_map<int, int> outerpsums;
+    unordered_map<int, int> innerpsums;
 
     //-------------------- END processing X
     for (int y = maxY; y >= minY; --y) 
@@ -97,6 +99,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                         {
                             if (p.x == x && p.y == y)
                             {
+                                innerpsums[city.category] += p.cloud;
                                 printed = true;
                                 break;
                             }
@@ -132,15 +135,22 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
         {
             if (p.x == coord.x && p.y == coord.y) 
             {
-                citysums[coord.category] += p.cloud;
+                outerpsums[coord.category] += p.cloud;
             }
         }
     }
 
     // Print the outerp sum for each city
-    for (const auto &pair : citysums) 
+    for (const auto &op : outerpsums) 
     {
-        cout << "Category " << pair.first << ": " << pair.second << endl;
+        cout << "Category " << op.first << ": " << op.second << endl;
+    }
+
+    // Print innerp sum for each city
+    cout << "Inner Pressure by Category:\n";
+    for (const auto &ip : innerpsums) 
+    {
+        cout << "Category " << ip.first << ": " << ip.second << endl;
     }
 }
 
