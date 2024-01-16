@@ -77,29 +77,34 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     // Vector to store coordinates of "X" along with city category
     vector<surrounddata> surrounds;
     
+    // experiment using map instead of unordered map
+    // dictionary to store surrounding and actual sum of pressure for each city
+    unordered_map<int, int> outerpsums; //default for city 2 is 314
+    unordered_map<int, int> innerpsums; //default for city 2 is 163
+    // dictionary to store surrounding and actual sum of cloud cover for each city
+    unordered_map<int, int> outercsums; //default for city 2 is 459
+    unordered_map<int, int> innercsums; //default for city 2 is 151
+    
 
-    // dictionary to store surrounding and actual sum of pressue for each city
-    unordered_map<int, int> outerpsums;
-    unordered_map<int, int> innerpsums;
 
-    //-------------------- END processing X
+    //-------------------- START processing surrounding coords
     for (int y = maxY; y >= minY; --y) 
     {
         for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
-
             for (auto &city : cities)
             {
-                for (auto &cloud : clouds)
+                for (auto &c : clouds)
                 {
-                    if (city.x == x && city.y == y && city.x == cloud.x && city.y == cloud.y) 
+                    if (city.x == x && city.y == y && city.x == c.x && city.y == c.y) 
                     {
                         for (auto &p : pressure)
                         {
                             if (p.x == x && p.y == y)
                             {
                                 innerpsums[city.category] += p.cloud;
+                                innercsums[city.category] += c.cloud;
                                 printed = true;
                                 break;
                             }
@@ -117,7 +122,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                 {
                     if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
                     {
-                        // Store coordinates of "X" along with city category
+                        // Store coordinates of surrounding coords along with city category
                         surrounds.push_back(surrounddata(x, y, city.category));
                         surroundPrinted = true;
                         break;
@@ -126,11 +131,12 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
             }
         }
     }
-    //-------------------- END processing X
+    //-------------------- END processing of surrounding coords
 
     // Sum surrounding pressure value for each city
     for (const auto &coord : surrounds) 
     {
+        
         for (const auto &p : pressure) 
         {
             if (p.x == coord.x && p.y == coord.y) 
@@ -138,19 +144,40 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                 outerpsums[coord.category] += p.cloud;
             }
         }
+        
+        for (auto &c : clouds)
+        {
+            if (c.x == coord.x && c.y == coord.y)
+            {
+                outercsums[coord.category] += c.cloud;
+            }
+        }
+        
     }
 
-    // Print the outerp sum for each city
+    // Print outerp sum for each city
+    cout << "Outer Pressure by City number:\n";
     for (const auto &op : outerpsums) 
     {
-        cout << "Category " << op.first << ": " << op.second << endl;
+        cout << "City " << op.first << ": " << op.second << endl;
     }
-
+    // Print outerc sum for each city
+    cout << "Outer cloud cover by City number:\n";
+    for (const auto &oc : outercsums) 
+    {
+        cout << "City " << oc.first << ": " << oc.second << endl;
+    }
     // Print innerp sum for each city
-    cout << "Inner Pressure by Category:\n";
+    cout << "Inner Pressure by City number:\n";
     for (const auto &ip : innerpsums) 
     {
-        cout << "Category " << ip.first << ": " << ip.second << endl;
+        cout << "City " << ip.first << ": " << ip.second << endl;
+    }
+    // Print innerc sum for each city
+    cout << "Inner cloud cover by City number:\n";
+    for (const auto &ic : innercsums) 
+    {
+        cout << "City " << ic.first << ": " << ic.second << endl;
     }
 }
 
