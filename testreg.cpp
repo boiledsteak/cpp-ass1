@@ -1,78 +1,127 @@
 #include <iostream>
-#include <iomanip>
 #include <vector>
+#include <string>
 
 using namespace std;
 
-void printGrid(const vector<vector<int>>& coordinates) 
+struct CityData 
 {
-    int maxX = 16;
-    int maxY = 16;
-    int spacingamt = 3;
-    string border = "#";
-    
-    // Print coordinates with y-axis labels
-    for (int y = maxY; y >= 0; --y) 
-    {
-        cout << left << setw(spacingamt) << y << border;
+    int x;
+    int y;
+    int category;
+    string cityName;
 
-        for (int x = 0; x <= maxX; ++x) 
+    CityData(string &str) 
+    {
+        stringstream ss(str);
+        char discard;
+        ss >> discard >> x >> discard >> y >> discard >> category >> discard >> cityName;
+    }
+};
+
+struct CloudData 
+{
+    int x;
+    int y;
+    int cloud;
+
+    CloudData(string &strr) 
+    {
+        stringstream sss(strr);
+        char discard;
+        sss >> discard >> x >> discard >> y >> discard >> cloud;
+    }
+};
+
+// Struct to store coordinates and category
+struct surrounddata 
+{
+    int x;
+    int y;
+    int category;
+
+    surrounddata(int x, int y, int category) : x(x), y(y), category(category) {}
+};
+
+void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
+{
+    int minX = xys[0];
+    int maxX = xys[1];
+    int minY = xys[2];
+    int maxY = xys[3];
+
+    int innerp = 0;
+    int outerp = 0; // should be 314 with default values
+
+    // Vector to store coordinates of "X" along with city category
+    vector<surrounddata> scoords;
+
+    //-------------------- END processing X
+    for (int y = maxY; y >= minY; --y) 
+    {
+        for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
 
-            for (const auto& coord : coordinates) 
+            for (auto &city : cities)
             {
-                if (coord[0] == x && coord[1] == y) 
+                for (auto &cloud : clouds)
                 {
-                    cout << left << setw(spacingamt) << "X"; // Adjust width setting
-                    printed = true;
-                    break;
+                    if (city.x == x && city.y == y && city.x == cloud.x && city.y == cloud.y) 
+                    {
+                        for (auto &p : pressure)
+                        {
+                            if (p.x == x && p.y == y)
+                            {
+                                printed = true;
+                                innerp += p.cloud;
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
 
-            if (!printed) {
-                cout << left << setw(spacingamt) << " ";
+            if (!printed) 
+            {
+                // Check for surrounding coordinates
+                bool surroundPrinted = false;
+                for (auto &city : cities) 
+                {
+                    if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1 ) 
+                    {
+                        // Store coordinates of "X" along with city category
+                        scoords.push_back(surrounddata(x, y, city.category));
+                        surroundPrinted = true;
+                        break;
+                    }                 
+                }
             }
         }
-        
-        // Adjust the position of the right border
-        cout << setw(spacingamt) << border;
-        
-        cout << "\n";
     }
+    //-------------------- END processing X
 
-    cout << setw(spacingamt) << " " << setw(spacingamt) << border << setw(border.length()) << " ";
-    
-    // Adjust the position of the right border
-    for (int i = 0; i <= maxX; i++)
+    // Sum surrounding pressure value
+    for (const auto &coord : scoords) 
     {
-        cout << left << setw(spacingamt) << border;
+        for (const auto &p : pressure) 
+        {
+            if (p.x == coord.x && p.y == coord.y) 
+            {
+                outerp += p.cloud;
+            }
+        }
     }
-    cout << "\n";
 
-    cout << setw((spacingamt * 2) + border.length()) << " ";
+    // Output or use the summed values as needed...
+    cout << "Inner Pressure: " << innerp << endl;
+    cout << "Outer Pressure: " << outerp << endl;
 
-    for (int x = 0; x <= maxX; ++x) 
+    // Print coordinates along with category
+    cout << "Coordinates with Category:\n";
+    for (const auto &coord : scoords) 
     {
-        cout << left << setw(spacingamt) << x;
+        cout << "(" << coord.x << "," << coord.y << "): Category " << coord.category << endl;
     }
-    cout << "\n";
-}
-
-int main() 
-{
-    vector<vector<int>> coordinates = {
-        {8, 7},
-        {3, 4},
-        {5, 1},
-        {7, 15},
-        {1, 0},
-        {4, 4},
-        {3, 5},
-        {9, 7} // Additional coordinate for testing adjacency
-    };
-
-    printGrid(coordinates);
-
-    return 0;
 }
