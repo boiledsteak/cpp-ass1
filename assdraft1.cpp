@@ -84,6 +84,8 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     // dictionary to store surrounding and actual sum of cloud cover for each city
     unordered_map<int, int> outercsums; //default for city 2 is 459
     unordered_map<int, int> innercsums; //default for city 2 is 151
+    // dictionary to store count of cities (no of coordinates each city uses)
+    unordered_map<int, int> printedCounts;  
     
 
 
@@ -105,6 +107,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                             {
                                 innerpsums[city.category] += p.cloud;
                                 innercsums[city.category] += c.cloud;
+                                printedCounts[city.category]++;
                                 printed = true;
                                 break;
                             }
@@ -124,10 +127,23 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
                     {
                         // Store coordinates of surrounding coords along with city category
                         surrounds.push_back(surrounddata(x, y, city.category));
+                        printedCounts[city.category]++;
                         surroundPrinted = true;
                         break;
                     }                 
                 }
+
+                // if (!surroundPrinted)
+                // {
+                //     // Increment count of "printed" for coordinates surrounding each city
+                //     for (auto &city : cities)
+                //     {
+                //         if (abs(city.x - x) <= 1 && abs(city.y - y) <= 1)
+                //         {
+                //             printedCounts[city.category]++;
+                //         }
+                //     }
+                // }
             }
         }
     }
@@ -178,6 +194,12 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     for (const auto &ic : innercsums) 
     {
         cout << "City " << ic.first << ": " << ic.second << endl;
+    }
+    // Print count of "printed" for each city
+    cout << "Count of 'printed' for each City number:\n";
+    for (const auto &count : printedCounts) 
+    {
+        cout << "City " << count.first << ": " << count.second << endl;
     }
 }
 
