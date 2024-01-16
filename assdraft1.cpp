@@ -171,10 +171,15 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
         
     }
 
+    unordered_map<int, int> totalp;
+    
+
+
     // Print outerp sum for each city
     cout << "Outer Pressure by City number:\n";
     for (const auto &op : outerpsums) 
     {
+        totalp[op.first] += op.second;
         cout << "City " << op.first << ": " << op.second << endl;
     }
     // Print outerc sum for each city
@@ -187,6 +192,7 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     cout << "Inner Pressure by City number:\n";
     for (const auto &ip : innerpsums) 
     {
+        totalp[ip.first] += ip.second;
         cout << "City " << ip.first << ": " << ip.second << endl;
     }
     // Print innerc sum for each city
@@ -201,6 +207,25 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     {
         cout << "City " << count.first << ": " << count.second << endl;
     }
+
+    cout << "\n\n";
+
+    cout << "Total pressure of each city\n";
+    for (const auto &tp : totalp) 
+    {
+        cout << "City " << tp.first << ": " << tp.second << endl;
+    }
+
+    
+
+    // cout << "\n\n\n\n\n\n";
+
+    // for (auto &city : cities)
+    // {
+    //     cout << "City Name:\t" << city.cityName << "\n";
+    //     cout << "City ID:\t" << city.category << "\n";
+    //     cout << setw(20) << "Avg cloud cover" << "(ACC)\t: " << 
+    // }
 }
 
 vector<CloudData> men3reader(string cloudfilename, int option)
