@@ -574,7 +574,7 @@ int main()
             cout << ">>>>>>>>>>>>\t"<< "Option\t" << menuchoice << "\t>>>>>>>>>>>>\n\n";
             if (!fivelines.empty())
             {
-                // get the GridX and GriY
+                // get the GridX and GridY
                 xys = xyer(xys, fivelines);
                 
                 // create the struct to hold citylocation.txt data
