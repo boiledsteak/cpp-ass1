@@ -19,7 +19,7 @@ regex may be system agnostic
 #include <sstream>
 #include <cstdlib>
 #include <limits>
-#include <unordered_map>
+#include <map>
 #include <algorithm>
 
 using namespace std;
@@ -144,7 +144,6 @@ int rainer(string ap, string acc)
     return rainchance;
 }
 
-
 void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
 {
     int minX = xys[0];
@@ -157,29 +156,27 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
     
     // experiment using map instead of unordered map
     // dictionary to store surrounding and actual sum of pressure for each city
-    unordered_map<int, int> outerpsums; //default for city 2 is 314
-    unordered_map<int, int> innerpsums; //default for city 2 is 163
+    map<int, int> outerpsums; //default for city 2 is 314
+    map<int, int> innerpsums; //default for city 2 is 163
     // dictionary to store surrounding and actual sum of cloud cover for each city
-    unordered_map<int, int> outercsums; //default for city 2 is 459
-    unordered_map<int, int> innercsums; //default for city 2 is 151
+    map<int, int> outercsums; //default for city 2 is 459
+    map<int, int> innercsums; //default for city 2 is 151
     // dictionary to store count of cities (no of coordinates each city uses)
-    unordered_map<int, int> printedCounts;  
+    map<int, int> printedCounts;  
     //dict to store total pressure of each city
-    unordered_map<int, int> totalp;
+    map<int, int> totalp;
     //dict to store total cloud cover of each city
-    unordered_map<int, int> totalc;
+    map<int, int> totalc;
     //dict to store average pressure of each city
-    unordered_map<int, double> avgp;
+    map<int, double> avgp;
     //dict to store average cloud cover of each city
-    unordered_map<int, double> avgc;
+    map<int, double> avgc;
     // to hold lmh values
     string plmh;
     string clmh;
     // to check if city has already been printed
     vector<int> printedcity;
     
-
-
     //-------------------- START processing surrounding coords
     for (int y = maxY; y >= minY; --y) 
     {
