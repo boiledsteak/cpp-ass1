@@ -65,7 +65,13 @@ struct surrounddata
     int y;
     int category;
     
-    surrounddata(int x, int y, int category) : x(x), y(y), category(category) {}
+    // surrounddata(int x, int y, int category) : x(x), y(y), category(category) {}
+    surrounddata(int X, int Y, int CATEGORY)
+    {
+        x=X;
+        y=Y;
+        category=CATEGORY;
+    }
 };
 
 string lmher(int amount)
