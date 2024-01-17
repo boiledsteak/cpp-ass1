@@ -5,6 +5,9 @@ Timothy Mah C++ module assignment
 
 =============================*/
 
+#include "constructors.h"
+#include "converters.h"
+
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -19,125 +22,6 @@ Timothy Mah C++ module assignment
 
 using namespace std;
 
-// store structs all in one .h file . Rmb to use header guard
-struct CityData 
-{
-    int x;
-    int y;
-    int category;
-    string cityName;
-
-    // Constructor to initialize the struct
-    CityData(string &str) 
-    {
-        // Use stringstream to split the string into components
-        stringstream ss(str);
-        char discard; // to discard '[' and ','
-        ss >> discard >> x >> discard >> y >> discard >> category >> discard >> cityName;
-    }
-};
-
-struct CloudData 
-{
-    int x;
-    int y;
-    int cloud;
-   
-    // Constructor to initialize the struct
-    CloudData(string &strr) 
-    {
-        // Use stringstream to split the string into components
-        stringstream sss(strr);
-        char discard; // to discard '[' and ','
-        sss >> discard >> x >> discard >> y >> discard >> cloud;
-    }
-};
-
-// Struct to store coordinates and category
-struct surrounddata 
-{
-    int x;
-    int y;
-    int category;
-    
-    // surrounddata(int x, int y, int category) : x(x), y(y), category(category) {}
-    surrounddata(int X, int Y, int CATEGORY)
-    {
-        x=X;
-        y=Y;
-        category=CATEGORY;
-    }
-};
-
-string lmher(int amount)
-{
-    string lmh;
-    // range L
-    if (amount >= 0 && amount <= 35)
-    {
-        lmh = "L";
-    }
-    // ange M
-    else if (amount >= 36 && amount <= 65)
-    {
-        lmh = "M";
-    }
-    // range H
-    else if (amount >= 66 && amount <= 100)
-    {
-        lmh = "H";
-    }
-    return lmh;
-}
-
-int rainer(string ap, string acc)
-{
-    int rainchance;
-
-    if (ap == "L" && acc == "H")
-    {
-        rainchance = 90;
-    }
-    else if (ap == "L" && acc == "M")
-    {
-        rainchance = 80;
-    }
-    else if (ap == "L" && acc == "L")
-    {
-        rainchance = 70;
-    }
-    else if (ap == "M" && acc == "H")
-    {
-        rainchance = 60;
-    }
-    else if (ap == "M" && acc == "M")
-    {
-        rainchance = 50;
-    }
-    else if (ap == "M" && acc == "L")
-    {
-        rainchance = 40;
-    }
-    else if (ap == "H" && acc == "H")
-    {
-        rainchance = 30;
-    }
-    else if (ap == "H" && acc == "M")
-    {
-        rainchance = 20;
-    }
-    else if (ap == "H" && acc == "L")
-    {
-        rainchance = 10;
-    }
-    else
-    {
-        // Default case if none of the above conditions are met
-        rainchance = 0;
-    }
-
-    return rainchance;
-}
 
 void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
 {
@@ -567,39 +451,6 @@ void men2printer(vector<CityData> &cities, int *xys)
     cout << "\n";
 }
 
-//take in string and delimiter, return vector. From Mr Thien
-vector<string> tokenizeString (string input, string delimiter)
-{
-	size_t pos = 0;
-	string token;
-	vector<string> result;
-
-	while ((pos = input.find(delimiter)) != string::npos) 
-	{
-    	token = input.substr(0, pos);
-    	result.push_back (token);
-		input.erase(0, pos + delimiter.length());
-	}
-
-	result.push_back (input);
-
-	return (result);
-}
-
-//stores upper and lower X and Y
-int *xyer(int *xys, vector<string> fivelines)
-{
-    vector<string> tempx = tokenizeString(fivelines[0], "-");
-    vector<string> tempy = tokenizeString(fivelines[1], "-");
-    
-    xys[0] = stoi(tempx[0]);
-    xys[1] = stoi(tempx[1]);
-    xys[2] = stoi(tempy[0]);
-    xys[3] = stoi(tempy[1]);
-           
-    return xys;
-}
-
 //reads and process config file. Menu option 1
 vector<string> men1(string confilename, vector<string> fivelines) 
 {
@@ -660,7 +511,6 @@ vector<string> men1(string confilename, vector<string> fivelines)
     return fivelines;
 }
 
-
 void menuprinter()
 {
     cout << "\n\n\n";
@@ -686,7 +536,6 @@ int main()
 {
     int progflow = 1;
     int menuchoice = 0;
-    string goback="nothing";
     string gobackmsg = " complete!\n Press ENTER to go back to main menu...";
     string noconfigmsg = "config file not processed!\nGoing back to main menu...";
     
