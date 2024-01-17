@@ -10,7 +10,6 @@ Timothy Mah C++ module assignment
 #include <iomanip>
 #include <ios>
 #include <fstream>
-#include <regex>
 #include <vector>
 #include <sstream>
 #include <cstdlib>
@@ -149,8 +148,6 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
 
     // Vector to store coordinates of "X" along with city category
     vector<surrounddata> surrounds;
-    
-    // experiment using map instead of unordered map
     // dictionary to store surrounding and actual sum of pressure for each city
     map<int, int> outerpsums; //default for city 2 is 314
     map<int, int> innerpsums; //default for city 2 is 163
@@ -359,11 +356,12 @@ vector<CloudData> men3reader(string cloudfilename, int option)
 {   
     string lp; //line pointer when reading file
     fstream cloudfile(cloudfilename,ios::in);
+
+    // create the struct
+    vector<CloudData> clouds;
     
     if (cloudfile.is_open()) //could add more input validation
     {
-        // create the struct
-        vector<CloudData> clouds;
         //read line by line config file
         while (getline(cloudfile >> ws, lp))
         {
@@ -388,6 +386,8 @@ vector<CloudData> men3reader(string cloudfilename, int option)
         } 
         return clouds;
     }
+    return clouds;
+
 }
 
 void men3printer(vector<CloudData> clouds, int *xys, int option)
@@ -475,11 +475,11 @@ vector<CityData> men2reader(string cityfilename)
 {   
     string lp; //line pointer when reading file
     fstream cityfile(cityfilename,ios::in);
+    // create the struct
+    vector<CityData> cities;
     
     if (cityfile.is_open()) //could add more input validation
     {
-        // create the struct
-        vector<CityData> cities;
         //read line by line config file
         while (getline(cityfile >> ws, lp))
         {
@@ -497,9 +497,10 @@ vector<CityData> men2reader(string cityfilename)
         } 
         return cities;
     }
+    return cities;
 }
 
-void men2printer(vector<CityData> cities, int *xys) 
+void men2printer(vector<CityData> &cities, int *xys) 
 {
     int minX = xys[0];
     int maxX = xys[1];
@@ -528,8 +529,7 @@ void men2printer(vector<CityData> cities, int *xys)
         for (int x = minX; x <= maxX; ++x) 
         {
             bool printed = false;
-            
-            for (auto &city : cities) 
+            for (auto city : cities) 
             {
                 if (city.x == x && city.y == y) 
                 {
@@ -600,37 +600,41 @@ int *xyer(int *xys, vector<string> fivelines)
     return xys;
 }
 
-
 //reads and process config file. Menu option 1
 vector<string> men1(string confilename, vector<string> fivelines) 
 {
     string lp; //line pointer when reading file
-    fstream confile(confilename,ios::in);
+    fstream confile(confilename, ios::in);
     vector<string> tokenStringVectorX; //temp holds the GridX_IdxRange=0-8. [0] is GridX..., [1] is 0-8
     vector<string> tokenStringVectorY; //temp holds the GridY_IdxRange=0-8. [0] is GridY..., [1] is 0-8
     
-    if (confile.is_open()) //could add more input validation
+    if (confile.is_open()) 
     {
         //read line by line config file
         while (getline(confile >> ws, lp))
         {
             // if not a comment, continue
-            if (!regex_match(lp,regex("//(.*)")))
+            if (lp.substr(0, 2) != "//") 
             {
-                //look for GridX
-                if (regex_match(lp,regex("Grid[X]_IdxRange(.*)")))
+                // look for GridX
+                size_t gridXPos = lp.find("GridX_IdxRange");
+                if (gridXPos != string::npos) 
                 {
                     tokenStringVectorX = tokenizeString(lp, "=");
                     fivelines.push_back(tokenStringVectorX[1]);
                 }
-                //look for GridY
-                if (regex_match(lp,regex("Grid[Y]_IdxRange(.*)")))
+
+                // look for GridY
+                size_t gridYPos = lp.find("GridY_IdxRange");
+                if (gridYPos != string::npos) 
                 {
                     tokenStringVectorY = tokenizeString(lp, "=");
                     fivelines.push_back(tokenStringVectorY[1]);
                 }
-                //look for .txt file
-                if (regex_match(lp,regex(".*txt$")))
+
+                // look for .txt file
+                size_t txtPos = lp.find(".txt");
+                if (txtPos != string::npos) 
                 {
                     fivelines.push_back(lp);
                 }
@@ -646,8 +650,7 @@ vector<string> men1(string confilename, vector<string> fivelines)
         cout << left << setw(20) << fivelines[3] << "...done!" << "\n";
         cout << left << setw(20) << fivelines[4] << "...done!" << "\n";
         cout << "\n";
-        cout << "All records successfully stored! Going back to main menu...\n\n";
-
+        cout << "All records successfully stored! Going back to the main menu...\n\n";
     }
     else
     {
@@ -656,6 +659,7 @@ vector<string> men1(string confilename, vector<string> fivelines)
 
     return fivelines;
 }
+
 
 void menuprinter()
 {
@@ -688,7 +692,7 @@ int main()
     
     vector<string> fivelines; //[0] is GridX, [1] is GridY, [2] is citylocation.txt, [3] is cloudcover.txt, [4] is pressure.txt
     // int lowerx, upperx, lowery, uppery; //0-8 for gridX and 0-8 for GridY
-    int *xys = new int[3]; //[0] is lower X, [1] is upper X, [2] is lower Y, [3] is upper Y
+    int *xys = new int[4]; //[0] is lower X, [1] is upper X, [2] is lower Y, [3] is upper Y
 
     while (progflow == 1)
     {
@@ -909,7 +913,6 @@ int main()
         }
         case 8:
         {
-            delete xys;
 			progflow = 0;
             break;
         } 
@@ -920,5 +923,6 @@ int main()
         }
         cout << "\n\n\n";
     }
+    delete[] xys;
     return 0;
 }
