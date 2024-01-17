@@ -3,10 +3,6 @@
 Timothy Mah C++ module assignment
 2 Jan 2024
 
-issues
-regex may be system agnostic
-
-
 =============================*/
 
 #include <iostream>
