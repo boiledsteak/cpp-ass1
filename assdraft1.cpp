@@ -22,6 +22,25 @@ Timothy Mah C++ module assignment
 
 using namespace std;
 
+void liner(map<int, double> avg)
+{
+    // print line chart
+    double maxValue = 0.0;
+    for ( auto  &pair : avg) 
+    {
+        maxValue = max(maxValue, pair.second);
+    }
+    // Print the line chart
+    for (auto &pair : avg) 
+    {
+        cout << pair.first << ": ";
+        // Scale the line length based on the ratio of the value to the max value
+        int lineLength = static_cast<int>((pair.second / maxValue) * 50); // 50 is an arbitrary constant for scaling
+        cout << string(lineLength, '-');
+        cout << " " << pair.second << "\n";
+    }
+}
+
 
 void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<CloudData> pressure, int *xys) 
 {
@@ -233,7 +252,17 @@ void men7printer(vector<CityData> cities, vector<CloudData> clouds, vector<Cloud
             
             printedcity.push_back(city.category);
         }        
+        
     }
+
+    //print line chart for pressure
+    cout << "\n\n" << "Average pressure LINE CHART\n";
+    cout << string(35,'>') << "\n";
+    liner(avgp);
+    //print line chart for cloud cover
+    cout << "\n\n" << "Average cloud cover LINE CHART\n";
+    cout << string(35,'>') << "\n";
+    liner(avgc);
 }
 
 vector<CloudData> men3reader(string cloudfilename, int option)
