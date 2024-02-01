@@ -1,6 +1,6 @@
 /*============================
 
-Timothy Mah C++ module assignment 1
+Timothy Mah C++ module assignment
 2 Jan 2024
 
 =============================*/
@@ -575,7 +575,7 @@ int main()
     while (progflow == 1)
     {
         menuprinter();
-        // input validation
+        // Check if cin expects an integer
         while (!(cin >> menuchoice)) 
         {
             cin.clear();  // Clear the error flag
