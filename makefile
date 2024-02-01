@@ -5,11 +5,11 @@ CC = g++
 CFLAGS = -std=c++11
 
 # Source files
-SRCS = assdraft1.cpp converters.cpp
+SRCS = csci251_a1.cpp converters.cpp
 HEADERS = constructors.h converters.h
 
 # Output file
-TARGET = ass.app
+TARGET = csci251_a1.app
 
 # Build rule
 $(TARGET): $(SRCS) $(HEADERS)
